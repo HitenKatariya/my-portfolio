@@ -125,7 +125,7 @@ const About = () => {
           initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
           transition={{ duration: 0.75, delay: 0.2 }}
-          className="mt-10 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]"
+          className="mt-10 space-y-6"
         >
           <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
             <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-cyan-200/90">
