@@ -117,6 +117,14 @@ const Hero = () => {
             >
               Certifications
             </button>
+            <a
+              href={profile.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-cyan-300/30 bg-cyan-500/10 px-8 py-3 text-sm font-semibold text-cyan-100 backdrop-blur transition hover:border-cyan-200/70 hover:bg-cyan-500/20"
+            >
+              Resume
+            </a>
           </motion.div>
         </motion.div>
       </div>

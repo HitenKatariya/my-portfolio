@@ -72,9 +72,7 @@ const Contact = () => {
           </h2>
           <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" />
           <p className="mx-auto max-w-2xl text-lg text-slate-400">
-            Submissions go through <code className="text-cyan-300">POST /api/contact</code>. With{" "}
-            <code className="text-cyan-300">RESEND_API_KEY</code> and <code className="text-cyan-300">CONTACT_TO_EMAIL</code> set, messages are emailed via
-            Resend; otherwise they append to <code className="text-cyan-300">data/inquiries.jsonl</code> for local testing.
+            Have a project, internship, or collaboration in mind? Send a message and I will get back to you as soon as possible.
           </p>
         </motion.div>
 

@@ -4,10 +4,11 @@ export const profile = {
   location: "Surat, Gujarat",
   phone: "+91 9099590979",
   email: "work.hitenkatariya@gmail.com",
+  resumeUrl: "/resume/Hiten_Katariya_Resume.pdf",
   initials: "HK",
   summary: [
-    "I am a passionate full-stack developer with strong skills in the MERN stack, AI/ML, and cloud technologies. I build scalable applications, AI-powered systems, and modern web platforms.",
-    "I am also interested in cybersecurity and cloud architecture, and I enjoy turning complex requirements into clear, maintainable software.",
+    "Cloud-focused Full Stack Developer skilled in MERN, AWS, and scalable system design. Experienced in building AI-powered and production-ready applications with strong focus on performance, security, and clean architecture.",
+    "Currently, I am seeking opportunities to apply my skills in real-world projects and contribute to innovative, high-impact systems.",
   ],
   social: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/hiten-katariya-778848293", icon: "linkedin" as const },
