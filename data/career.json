@@ -6,7 +6,9 @@
       "issuer": "AWS Training",
       "hours": 20,
       "category": "Cloud",
-      "accent": "from-amber-500/20 to-orange-500/10"
+      "accent": "from-amber-500/20 to-orange-500/10",
+      "credentialUrl": "https://www.credly.com/go/XdCvWk80",
+      "pdfUrl": "/certificates/aws-cloud-foundations.pdf"
     },
     {
       "id": "aws-cloud-developing",
@@ -14,7 +16,9 @@
       "issuer": "AWS Training",
       "hours": 40,
       "category": "Cloud",
-      "accent": "from-orange-500/20 to-amber-500/10"
+      "accent": "from-orange-500/20 to-amber-500/10",
+      "credentialUrl": "https://www.credly.com/go/lv2sObJb",
+      "pdfUrl": "/certificates/aws-cloud-developing.pdf"
     },
     {
       "id": "aws-cloud-practitioner-cloud-quest",
@@ -22,7 +26,9 @@
       "issuer": "AWS",
       "hours": null,
       "category": "Cloud",
-      "accent": "from-yellow-500/20 to-amber-500/10"
+      "accent": "from-yellow-500/20 to-amber-500/10",
+      "credentialUrl": "https://www.credly.com/badges/12c449d6-76aa-4a4a-b0b9-21d00afb0f96/public_url",
+      "pdfUrl": "/certificates/aws-cloud-quest.pdf"
     },
     {
       "id": "mern-coursera",
@@ -30,7 +36,8 @@
       "issuer": "Coursera",
       "hours": null,
       "category": "Web",
-      "accent": "from-emerald-500/20 to-cyan-500/10"
+      "accent": "from-emerald-500/20 to-cyan-500/10",
+      "pdfUrl": "/certificates/MERN-Stack-Full-Course.pdf"
     },
     {
       "id": "ml-python-ibm",
@@ -38,7 +45,8 @@
       "issuer": "IBM",
       "hours": null,
       "category": "AI/ML",
-      "accent": "from-sky-500/20 to-blue-500/10"
+      "accent": "from-sky-500/20 to-blue-500/10",
+      "pdfUrl": "/certificates/ML-with-python.pdf"
     },
     {
       "id": "ibm-devops-cloud-agile",
@@ -46,7 +54,8 @@
       "issuer": "IBM",
       "hours": null,
       "category": "DevOps",
-      "accent": "from-violet-500/20 to-purple-500/10"
+      "accent": "from-violet-500/20 to-purple-500/10",
+      "pdfUrl": "/certificates/Coursera_IBM_Devops.pdf"
     },
     {
       "id": "cryptography-essentials",
@@ -54,7 +63,8 @@
       "issuer": "IBM / Security track",
       "hours": null,
       "category": "Security",
-      "accent": "from-rose-500/20 to-fuchsia-500/10"
+      "accent": "from-rose-500/20 to-fuchsia-500/10",
+      "pdfUrl": "/certificates/Coursera_cryptography.pdf"
     },
     {
       "id": "research-paper-writing",
@@ -62,7 +72,8 @@
       "issuer": "Academic / Professional program",
       "hours": null,
       "category": "Research",
-      "accent": "from-teal-500/20 to-emerald-500/10"
+      "accent": "from-teal-500/20 to-emerald-500/10",
+      "pdfUrl": "/certificates/Coursera_research_writing.pdf"
     }
   ],
   "achievements": [

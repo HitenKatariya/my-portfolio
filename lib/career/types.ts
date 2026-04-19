@@ -5,6 +5,8 @@ export type CertificateRecord = {
   hours: number | null
   category: string
   accent: string
+  credentialUrl?: string
+  pdfUrl?: string
 }
 
 export type AchievementRecord = {

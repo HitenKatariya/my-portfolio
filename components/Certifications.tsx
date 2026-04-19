@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Award, Loader2, Sparkles, Trophy } from "lucide-react"
+import { Award, ExternalLink, FileText, Loader2, Sparkles, Trophy } from "lucide-react"
 import type { AchievementRecord, CertificateRecord } from "@/lib/career/types"
 import { cn } from "@/lib/utils"
 
@@ -96,6 +96,32 @@ const Certifications = () => {
                     <p className="text-sm text-slate-400">{cert.issuer}</p>
                     {typeof cert.hours === "number" && (
                       <p className="mt-3 text-xs font-medium uppercase tracking-widest text-violet-200/90">{cert.hours} hours</p>
+                    )}
+                    {(cert.credentialUrl || cert.pdfUrl) && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {cert.credentialUrl && (
+                          <a
+                            href={cert.credentialUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-cyan-200 transition hover:bg-cyan-500/20"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            Verify
+                          </a>
+                        )}
+                        {cert.pdfUrl && (
+                          <a
+                            href={cert.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-violet-200 transition hover:bg-violet-500/20"
+                          >
+                            <FileText className="h-3.5 w-3.5" />
+                            View PDF
+                          </a>
+                        )}
+                      </div>
                     )}
                     <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                     <p className="mt-4 text-[11px] uppercase tracking-widest text-slate-500">Verified credential</p>
