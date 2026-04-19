@@ -31,9 +31,10 @@ Fill in anything you have below and paste it in chat or attach files. Mark "N/A"
    - 3–6 bullet "impact" statements with metrics (latency, users, cost, uptime).
    - Technologies you want emphasized that are missing from Skills.
 
-6) CONTACT FORM DESTINATION
-   - Preferred: Resend / SendGrid API key + target email (I can wire server email).
-   - Or webhook URL (Slack / Discord / Form backend).
+6) CONTACT FORM DESTINATION (implemented: Resend)
+   - Local: copy `.env.example` to `.env.local` and set RESEND_API_KEY + CONTACT_TO_EMAIL (never commit .env.local).
+   - Vercel: Project → Settings → Environment Variables → add RESEND_API_KEY and CONTACT_TO_EMAIL for Production.
+   - Optional: RESEND_FROM_EMAIL after verifying your own domain in Resend (default uses onboarding@resend.dev for testing).
 
 7) LEGAL & PRIVACY
    - Whether contact submissions may be stored on disk in production (currently JSONL for dev).

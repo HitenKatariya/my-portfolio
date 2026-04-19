@@ -72,8 +72,9 @@ const Contact = () => {
           </h2>
           <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" />
           <p className="mx-auto max-w-2xl text-lg text-slate-400">
-            Messages are persisted on the server via <code className="text-cyan-300">POST /api/contact</code> (JSON Lines in{" "}
-            <code className="text-cyan-300">data/inquiries.jsonl</code>). Wire email notifications when you are ready.
+            Submissions go through <code className="text-cyan-300">POST /api/contact</code>. With{" "}
+            <code className="text-cyan-300">RESEND_API_KEY</code> and <code className="text-cyan-300">CONTACT_TO_EMAIL</code> set, messages are emailed via
+            Resend; otherwise they append to <code className="text-cyan-300">data/inquiries.jsonl</code> for local testing.
           </p>
         </motion.div>
 
@@ -133,7 +134,8 @@ const Contact = () => {
               <p className="text-sm font-semibold text-white">{profile.name}</p>
               <p className="text-xs text-cyan-200/90">{profile.role}</p>
               <p className="mt-3 text-xs leading-relaxed text-slate-400">
-                Replace the file-based inbox with Resend, SendGrid, or a CRM webhook when you promote this to production.
+                Production: set the same env vars on Vercel. Optional <code className="text-cyan-200/90">RESEND_FROM_EMAIL</code> after you verify a domain in
+                Resend.
               </p>
             </div>
           </motion.div>
