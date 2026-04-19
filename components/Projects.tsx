@@ -50,10 +50,9 @@ const Projects = () => {
           <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
             Projects <span className="bg-gradient-to-r from-cyan-300 to-violet-300 bg-clip-text text-transparent">with depth</span>
           </h2>
-          <p className="mx-auto mb-8 max-w-2xl text-slate-400">
-            Each card opens a README-style brief: highlights, architecture notes, and curated links. Hero images load from{" "}
-            <code className="text-cyan-300">/public/projects/*.png</code>.
-          </p>
+            <p className="mx-auto mb-8 max-w-2xl text-slate-400">
+              Explore project case studies with key outcomes, architecture decisions, and the tech stack behind each build.
+            </p>
           <div className="mx-auto flex flex-wrap justify-center gap-2">
             {categories.map((c) => (
               <button

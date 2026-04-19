@@ -73,7 +73,6 @@ const Hero = () => {
 
       <div className="relative z-10 max-w-5xl px-4 text-center">
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200/80">Portfolio · Frontend + API</p>
           <motion.h1
             className="mb-5 text-5xl font-bold tracking-tight text-white md:text-7xl"
             initial={{ scale: 0.92 }}

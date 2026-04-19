@@ -47,11 +47,31 @@ const Navbar = () => {
   }, [navItems])
 
   const scrollToSection = (href: string) => {
-    const element = document.getElementById(href.substring(1))
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+    const id = href.substring(1)
+
+    const performScroll = () => {
+      if (id === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+        setActiveSection("home")
+        return
+      }
+
+      const element = document.getElementById(id)
+      if (!element) return
+
+      const navOffset = 76
+      const top = element.getBoundingClientRect().top + window.scrollY - navOffset
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" })
+      setActiveSection(id)
     }
-    setIsOpen(false)
+
+    if (isOpen) {
+      setIsOpen(false)
+      window.setTimeout(performScroll, 180)
+      return
+    }
+
+    performScroll()
   }
 
   return (

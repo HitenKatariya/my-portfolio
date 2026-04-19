@@ -98,7 +98,7 @@ const Certifications = () => {
                       <p className="mt-3 text-xs font-medium uppercase tracking-widest text-violet-200/90">{cert.hours} hours</p>
                     )}
                     <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                    <p className="mt-4 text-[11px] uppercase tracking-widest text-slate-500">Stored in DB</p>
+                    <p className="mt-4 text-[11px] uppercase tracking-widest text-slate-500">Verified credential</p>
                   </div>
                 </motion.article>
               ))}

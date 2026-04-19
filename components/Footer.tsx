@@ -94,7 +94,7 @@ const Footer = () => {
         </motion.div>
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
-          <p className="text-center text-xs text-slate-500 md:text-left">© {new Date().getFullYear()} {profile.name}. Built with Next.js — API routes for career data & contact capture.</p>
+          <p className="text-center text-xs text-slate-500 md:text-left">© {new Date().getFullYear()} {profile.name}. Built with Next.js, TypeScript, and Tailwind CSS.</p>
           <motion.button
             type="button"
             onClick={scrollToTop}
