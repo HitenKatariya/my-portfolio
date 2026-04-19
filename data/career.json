@@ -1,0 +1,80 @@
+{
+  "certificates": [
+    {
+      "id": "aws-cloud-foundations",
+      "title": "AWS Cloud Foundations",
+      "issuer": "AWS Training",
+      "hours": 20,
+      "category": "Cloud",
+      "accent": "from-amber-500/20 to-orange-500/10"
+    },
+    {
+      "id": "aws-cloud-developing",
+      "title": "AWS Cloud Developing",
+      "issuer": "AWS Training",
+      "hours": 40,
+      "category": "Cloud",
+      "accent": "from-orange-500/20 to-amber-500/10"
+    },
+    {
+      "id": "aws-cloud-practitioner-cloud-quest",
+      "title": "AWS Cloud Practitioner (Cloud Quest)",
+      "issuer": "AWS",
+      "hours": null,
+      "category": "Cloud",
+      "accent": "from-yellow-500/20 to-amber-500/10"
+    },
+    {
+      "id": "mern-coursera",
+      "title": "MERN Stack Full Course",
+      "issuer": "Coursera",
+      "hours": null,
+      "category": "Web",
+      "accent": "from-emerald-500/20 to-cyan-500/10"
+    },
+    {
+      "id": "ml-python-ibm",
+      "title": "Machine Learning with Python",
+      "issuer": "IBM",
+      "hours": null,
+      "category": "AI/ML",
+      "accent": "from-sky-500/20 to-blue-500/10"
+    },
+    {
+      "id": "ibm-devops-cloud-agile",
+      "title": "IBM DevOps, Cloud & Agile",
+      "issuer": "IBM",
+      "hours": null,
+      "category": "DevOps",
+      "accent": "from-violet-500/20 to-purple-500/10"
+    },
+    {
+      "id": "cryptography-essentials",
+      "title": "Cryptography Essentials",
+      "issuer": "IBM / Security track",
+      "hours": null,
+      "category": "Security",
+      "accent": "from-rose-500/20 to-fuchsia-500/10"
+    },
+    {
+      "id": "research-paper-writing",
+      "title": "Research Paper Writing",
+      "issuer": "Academic / Professional program",
+      "hours": null,
+      "category": "Research",
+      "accent": "from-teal-500/20 to-emerald-500/10"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "pyquest-5",
+      "title": "5th Rank — PyQuest Hackathon",
+      "description": "Recognized for problem-solving, implementation quality, and speed under competitive constraints."
+    },
+    {
+      "id": "nptel-dsa",
+      "title": "NPTEL DSA Certification",
+      "description": "Formal validation of data structures and algorithms fundamentals for scalable software design."
+    }
+  ]
+}
