@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
-import { Github, Instagram, Linkedin, MapPin, Phone, Sparkles } from "lucide-react"
+import { Briefcase, ExternalLink, Github, GraduationCap, Instagram, Linkedin, MapPin, Phone, Sparkles } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 
 const iconMap = {
@@ -117,6 +117,63 @@ const About = () => {
                   <p className="mt-2 text-sm text-slate-200">{card.body}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-cyan-200/90">
+                <GraduationCap className="h-4 w-4" />
+                Education
+              </div>
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <p className="text-base font-semibold text-white">{profile.education.degree}</p>
+                <p className="mt-1 text-sm text-slate-300">{profile.education.institution}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-slate-300">
+                  <p>
+                    Current GPA: <span className="font-semibold text-white">{profile.education.currentGpa}</span>
+                  </p>
+                  <p>
+                    Expected Graduation: <span className="font-semibold text-white">{profile.education.expectedGraduation}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-cyan-200/90">
+                <Briefcase className="h-4 w-4" />
+                Experience
+              </div>
+              <div className="space-y-4">
+                {profile.experience.map((item) => (
+                  <div key={item.company} className="rounded-xl border border-white/10 bg-black/20 p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div>
+                        <p className="text-base font-semibold text-white">{item.company}</p>
+                        <p className="text-sm italic text-slate-300">{item.role}</p>
+                      </div>
+                      <span className="text-sm text-slate-400">{item.period}</span>
+                    </div>
+
+                    <ul className="mt-3 space-y-1 text-sm leading-relaxed text-slate-300">
+                      {item.points.map((point) => (
+                        <li key={point}>- {point}</li>
+                      ))}
+                    </ul>
+
+                    {item.link && (
+                      <a
+                        href={item.link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-200 transition hover:text-cyan-100"
+                      >
+                        {item.link.label}
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>

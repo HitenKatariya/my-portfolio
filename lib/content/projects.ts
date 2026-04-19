@@ -20,7 +20,7 @@ export const projects: ProjectDetail[] = [
     title: "AI Healthcare Assistant",
     tagline: "Multi-app healthcare workspace — AI triage, nearby hospitals, appointments, and a hospital dashboard.",
     role: "Full Stack (React 19 · Vite · Node · Express · MongoDB · Groq)",
-    year: "2025",
+    year: "2026",
     heroImage: "/projects/ai-health-assistant.png",
     stack: [
       "React 19",
@@ -246,7 +246,7 @@ export const projects: ProjectDetail[] = [
     title: "AWS 3-Tier VPC Architecture",
     tagline: "Secure web, app, and database tiers on a custom VPC with controlled routing.",
     role: "Cloud Architecture · AWS",
-    year: "2025",
+    year: "2026",
     heroImage: "/projects/aws-3tier.png",
     stack: ["AWS VPC", "EC2", "Nginx", "Apache Tomcat", "MySQL", "NAT Gateway", "Internet Gateway", "Route Tables"],
     links: [{ label: "GitHub", href: "https://github.com/HitenKatariya/aws-3tier-architecture" }],
