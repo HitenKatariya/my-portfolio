@@ -1,9 +1,9 @@
 export const profile = {
   name: "Hiten Katariya",
-  role: "AIML Engineer & Full Stack Developer",
+  role: "Cloud Engineer & Full Stack Developer",
   location: "Surat, Gujarat",
   phone: "+91 9099590979",
-  email: "hitenvk22@gmail.com",
+  email: "work.hitenkatariya@gmail.com",
   initials: "HK",
   summary: [
     "I am a passionate full-stack developer with strong skills in the MERN stack, AI/ML, and cloud technologies. I build scalable applications, AI-powered systems, and modern web platforms.",

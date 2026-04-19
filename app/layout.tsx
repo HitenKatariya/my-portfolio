@@ -4,11 +4,11 @@ import { GeistMono } from "geist/font/mono"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Hiten Katariya — AIML & Full Stack",
+  title: "Hiten Katariya — Cloud & Full Stack",
   description:
     "Portfolio of Hiten Katariya: MERN stack, AI/ML systems, cloud architecture, certifications, and selected projects with API-backed content.",
   openGraph: {
-    title: "Hiten Katariya — AIML Engineer & Full Stack Developer",
+    title: "Hiten Katariya — Cloud Engineer & Full Stack Developer",
     description: "Full portfolio with premium UI, projects, certifications, and scalable Next.js architecture.",
     type: "website",
   },

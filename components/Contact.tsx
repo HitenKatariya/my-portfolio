@@ -89,7 +89,7 @@ const Contact = () => {
             <div>
               <h3 className="mb-3 text-2xl font-semibold text-white">Availability</h3>
               <p className="leading-relaxed text-slate-400">
-                Open to AIML + full-stack collaborations, internships, and product teams that care about craft. Prefer async-first communication with crisp
+                Open to cloud + full-stack collaborations, internships, and product teams that care about craft. Prefer async-first communication with crisp
                 context.
               </p>
             </div>
@@ -134,8 +134,7 @@ const Contact = () => {
               <p className="text-sm font-semibold text-white">{profile.name}</p>
               <p className="text-xs text-cyan-200/90">{profile.role}</p>
               <p className="mt-3 text-xs leading-relaxed text-slate-400">
-                Production: set the same env vars on Vercel. Optional <code className="text-cyan-200/90">RESEND_FROM_EMAIL</code> after you verify a domain in
-                Resend.
+                I build cloud-ready, full-stack products with a focus on reliability, performance, and thoughtful user experience.
               </p>
             </div>
           </motion.div>
