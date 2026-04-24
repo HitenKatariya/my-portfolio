@@ -52,8 +52,7 @@ const Certifications = () => {
             <span className="bg-gradient-to-r from-violet-300 to-cyan-300 bg-clip-text text-transparent">Achievements</span>
           </h2>
           <p className="mx-auto max-w-2xl text-slate-400">
-            Certificates are served from the portfolio data store via <code className="text-cyan-300">GET /api/career</code> so you can grow the list without
-            touching UI code.
+            Explore verified certifications and key milestones loaded dynamically from the career API to keep this section current and easy to update.
           </p>
         </motion.div>
 
