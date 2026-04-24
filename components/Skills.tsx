@@ -67,8 +67,11 @@ const Skills = () => {
   ]
 
   return (
-    <section id="skills" className="relative overflow-hidden bg-gradient-to-b from-[#030712] to-[#020617] py-24 px-4">
-      <div className="pointer-events-none absolute inset-x-0 top-10 h-48 bg-gradient-to-b from-violet-500/15 to-transparent blur-3xl" />
+    <section
+      id="skills"
+      className="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-24 px-4 transition-colors duration-300 dark:from-[#030712] dark:to-[#020617]"
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-10 h-48 bg-gradient-to-b from-indigo-300/25 to-transparent blur-3xl dark:from-violet-500/15" />
       <div className="relative mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 36 }}
@@ -77,11 +80,11 @@ const Skills = () => {
           transition={{ duration: 0.75 }}
           className="mb-16 text-center"
         >
-          <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+          <h2 className="mb-4 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl">
             Skills <span className="bg-gradient-to-r from-cyan-300 to-violet-300 bg-clip-text text-transparent">&amp; stack</span>
           </h2>
           <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" />
-          <p className="mx-auto max-w-2xl text-lg text-slate-400">
+          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
             A concise map of the tools I reach for when shipping full-stack products, AI features, and cloud-ready systems.
           </p>
         </motion.div>
@@ -103,14 +106,14 @@ const Skills = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: index * 0.06 }}
               viewport={{ once: true }}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-lg shadow-black/30 backdrop-blur transition hover:border-cyan-400/40 hover:bg-white/[0.05]"
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-md shadow-slate-200/70 backdrop-blur transition hover:border-blue-400/40 hover:shadow-lg dark:border-white/10 dark:bg-white/[0.03] dark:shadow-lg dark:shadow-black/30 dark:hover:border-cyan-400/40 dark:hover:bg-white/[0.05]"
               whileHover={{ y: -4 }}
             >
               <div className="mb-4 text-center text-3xl">{category.icon}</div>
-              <h3 className="mb-4 text-center text-lg font-semibold text-white">{category.title}</h3>
+              <h3 className="mb-4 text-center text-lg font-semibold text-slate-900 dark:text-white">{category.title}</h3>
               <ul className="space-y-2">
                 {category.skills.map((skill) => (
-                  <li key={skill} className="flex items-center text-sm text-slate-300">
+                  <li key={skill} className="flex items-center text-sm text-slate-700 dark:text-slate-300">
                     <span className="mr-3 h-1.5 w-1.5 rounded-full bg-cyan-400" />
                     {skill}
                   </li>
