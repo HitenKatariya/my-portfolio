@@ -4,7 +4,7 @@ export const profile = {
   location: "Surat, Gujarat",
   phone: "+91 9099590979",
   email: "work.hitenkatariya@gmail.com",
-  resumeUrl: "https://drive.google.com/file/d/1R7yKtxQ4m8pAsFwwkmtLzINXJNbwwqiv/view?usp=sharing",
+  resumeUrl: "https://drive.google.com/file/d/1DjTyl-Xpae4nf7MzPihbhbDLe1fjG8bY/view?usp=sharing",
   initials: "HK",
   summary: [
     "Cloud-focused Full Stack Developer skilled in MERN, AWS, and scalable system design. Experienced in building AI-powered and production-ready applications with strong focus on performance, security, and clean architecture.",
