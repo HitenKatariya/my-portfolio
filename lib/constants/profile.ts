@@ -18,7 +18,7 @@ export const profile = {
   education: {
     degree: "B.Tech in Computer Science and Engineering",
     institution: "Charotar University of Science and Technology (CHARUSAT)",
-    currentGpa: "8.23",
+    currentGpa: "8.44",
     expectedGraduation: "2027",
   },
   experience: [
