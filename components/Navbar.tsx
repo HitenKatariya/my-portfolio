@@ -1,45 +1,64 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
-import { useTheme } from "next-themes"
 import { profile } from "@/lib/constants/profile"
+import { pageContainerClass } from "@/components/PageContainer"
+import { cn } from "@/lib/utils"
+
+const SCROLL_BG_THRESHOLD = 48
+const HIDE_SCROLL_THRESHOLD = 120
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
-  const [mounted, setMounted] = useState(false)
-  const { resolvedTheme, setTheme } = useTheme()
+  const [scrolled, setScrolled] = useState(false)
+  const [visible, setVisible] = useState(true)
+  const lastScrollY = useRef(0)
 
   const navItems = useMemo(
     () =>
       [
-        { name: "Home", href: "#home" },
-        { name: "About", href: "#about" },
-        { name: "Projects", href: "#projects" },
-        { name: "Certs", href: "#certifications" },
-        { name: "Skills", href: "#skills" },
-        { name: "Contact", href: "#contact" },
+        { label: "home", href: "#home" },
+        { label: "about", href: "#about" },
+        { label: "projects", href: "#projects" },
+        { label: "certs", href: "#certifications" },
+        { label: "skills", href: "#skills" },
+        { label: "contact", href: "#contact" },
       ] as const,
     [],
   )
 
+  const logoSlug = profile.name.split(" ")[0].toLowerCase()
+
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navItems.map((item) => item.href.substring(1))
-      const scrollPosition = window.scrollY + 120
+      const currentY = window.scrollY
+      setScrolled(currentY > SCROLL_BG_THRESHOLD)
 
-      for (const section of sections) {
+      if (currentY <= HIDE_SCROLL_THRESHOLD) {
+        setVisible(true)
+      } else if (currentY > lastScrollY.current + 6) {
+        setVisible(false)
+        setIsOpen(false)
+      } else if (currentY < lastScrollY.current - 6) {
+        setVisible(true)
+      }
+
+      lastScrollY.current = currentY
+
+      const scrollPosition = currentY + 120
+      for (const item of navItems) {
+        const section = item.href.substring(1)
         const element = document.getElementById(section)
-        if (element) {
-          const offsetTop = element.offsetTop
-          const offsetHeight = element.offsetHeight
+        if (!element) continue
 
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
-          }
+        const offsetTop = element.offsetTop
+        const offsetHeight = element.offsetHeight
+        if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+          setActiveSection(section)
+          break
         }
       }
     }
@@ -48,10 +67,6 @@ const Navbar = () => {
     handleScroll()
     return () => window.removeEventListener("scroll", handleScroll)
   }, [navItems])
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const scrollToSection = (href: string) => {
     const id = href.substring(1)
@@ -82,92 +97,63 @@ const Navbar = () => {
   }
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl transition-colors duration-300 dark:border-white/10 dark:bg-[#020617]/80"
+    <motion.header
+      initial={{ y: -80 }}
+      animate={{ y: visible ? 0 : -96 }}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
+        scrolled
+          ? "border-b border-white/[0.06] bg-[#0a0c10]/90 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      }`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.02 }}
-            onClick={() => scrollToSection("#home")}
-            className="text-left text-lg font-bold tracking-tight text-slate-900 dark:text-white"
-          >
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-cyan-300 dark:to-violet-300">
-              {profile.name}
-            </span>
-            <span className="ml-2 hidden text-xs font-medium text-slate-500 dark:text-slate-400 sm:inline">{profile.role}</span>
-          </motion.button>
+      <nav className={cn(pageContainerClass, "flex h-[4.25rem] items-center justify-between")}>
+        <button
+          type="button"
+          onClick={() => scrollToSection("#home")}
+          className="font-mono text-[15px] text-slate-400 transition-colors hover:text-white sm:text-base"
+        >
+          {`</${logoSlug}>`}
+        </button>
 
-          <div className="hidden md:block">
-            <div className="flex items-center gap-1">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.name}
-                  type="button"
-                  onClick={() => scrollToSection(item.href)}
-                  className={`relative rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-wide transition ${
-                    activeSection === item.href.substring(1)
-                      ? "text-blue-700 dark:text-cyan-200"
-                      : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
-                  }`}
-                  whileHover={{ scale: 1.04 }}
-                >
-                  {item.name}
-                  {activeSection === item.href.substring(1) && (
-                    <motion.span
-                      layoutId="navPill"
-                      className="absolute inset-0 -z-10 rounded-full bg-slate-100 ring-1 ring-blue-500/30 dark:bg-white/5 dark:ring-cyan-400/30"
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
-            </div>
-          </div>
+        <div className="hidden items-center gap-7 md:flex">
+          {navItems.map((item) => {
+            const sectionId = item.href.substring(1)
+            const isActive = activeSection === sectionId
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              aria-label="Toggle theme"
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              className="group relative inline-flex h-11 w-24 items-center rounded-full border border-[#2b2d34] bg-[#17191f] p-1 shadow-[0_6px_18px_rgba(0,0,0,0.35)] transition-all duration-300"
-            >
-              <span className="flex w-full items-center justify-between px-2 text-[17px] leading-none">
-                <span className={`transition-all duration-300 ${mounted && resolvedTheme === "dark" ? "scale-100 text-slate-300 opacity-90" : "scale-90 text-slate-500 opacity-45"}`}>
-                  ☾
-                </span>
-                <span className={`transition-all duration-300 ${mounted && resolvedTheme === "dark" ? "scale-90 text-slate-500 opacity-45" : "scale-100 text-slate-300 opacity-90"}`}>
-                  ☀
-                </span>
-              </span>
-              <span
-                className={`absolute top-1 h-9 w-9 rounded-full border border-[#5a61ff] bg-[#3f46da] text-white shadow-[0_5px_14px_rgba(63,70,218,0.55)] transition-all duration-300 ${
-                  mounted && resolvedTheme === "dark"
-                    ? "left-1"
-                    : "left-[50px]"
-                } flex items-center justify-center text-[19px]`}
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => scrollToSection(item.href)}
+                className={`relative font-mono text-[15px] transition-colors duration-300 sm:text-base ${
+                  isActive
+                    ? "text-[#27cbcb]"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
               >
-                {mounted && resolvedTheme === "dark" ? "☾" : "☀"}
-              </span>
-              <span className="sr-only">Toggle theme</span>
-            </button>
-          </div>
-
-          <div className="md:hidden">
-            <button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-800 transition hover:text-blue-600 dark:text-white dark:hover:text-cyan-300"
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+                {`/${item.label}`}
+                {isActive && (
+                  <motion.span
+                    layoutId="navUnderline"
+                    className="absolute -bottom-1 left-0 right-0 h-px bg-[#27cbcb]"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+              </button>
+            )
+          })}
         </div>
-      </div>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-slate-300 transition hover:text-[#27cbcb] md:hidden"
+          aria-label="Toggle menu"
+        >
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </nav>
 
       <AnimatePresence>
         {isOpen && (
@@ -175,29 +161,33 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-slate-200/80 bg-white/95 backdrop-blur-xl transition-colors duration-300 dark:border-white/10 dark:bg-[#020617]/95 md:hidden"
+            className="border-t border-white/10 bg-[#0a0c10]/95 backdrop-blur-md md:hidden"
           >
-            <div className="space-y-1 px-2 py-3">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.name}
-                  type="button"
-                  onClick={() => scrollToSection(item.href)}
-                  className={`block w-full rounded-xl px-3 py-3 text-left text-sm font-semibold uppercase tracking-wide transition ${
-                    activeSection === item.href.substring(1)
-                      ? "bg-blue-50 text-blue-700 dark:bg-white/10 dark:text-cyan-200"
-                      : "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5"
-                  }`}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {item.name}
-                </motion.button>
-              ))}
+            <div className={cn(pageContainerClass, "space-y-1 py-3")}>
+              {navItems.map((item) => {
+                const sectionId = item.href.substring(1)
+                const isActive = activeSection === sectionId
+
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => scrollToSection(item.href)}
+                    className={`block w-full rounded-lg px-2 py-2.5 text-left font-mono text-[15px] transition sm:text-base ${
+                      isActive
+                        ? "text-[#27cbcb]"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    {`/${item.label}`}
+                  </button>
+                )
+              })}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </motion.header>
   )
 }
 

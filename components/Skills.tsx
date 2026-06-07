@@ -4,6 +4,7 @@ import { useRef } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { motion } from "framer-motion"
 import type * as THREE from "three"
+import PageContainer from "@/components/PageContainer"
 
 const SkillOrb = ({ position, color }: { position: [number, number, number]; color: string }) => {
   const meshRef = useRef<THREE.Mesh>(null)
@@ -25,12 +26,12 @@ const SkillOrb = ({ position, color }: { position: [number, number, number]; col
 
 const SkillsOrbit = () => {
   const nodes = [
-    { color: "#22d3ee", position: [2.4, 0.4, 0] as [number, number, number] },
-    { color: "#a855f7", position: [-2.4, -0.2, 0] as [number, number, number] },
-    { color: "#34d399", position: [0, 0.6, 2.2] as [number, number, number] },
-    { color: "#f97316", position: [0, -0.6, -2.2] as [number, number, number] },
-    { color: "#38bdf8", position: [1.6, 1.3, 1.4] as [number, number, number] },
-    { color: "#e879f9", position: [-1.7, -1.2, -1.3] as [number, number, number] },
+    { color: "#27cbcb", position: [2.4, 0.4, 0] as [number, number, number] },
+    { color: "#26d868", position: [-2.4, -0.2, 0] as [number, number, number] },
+    { color: "#14b8a6", position: [0, 0.6, 2.2] as [number, number, number] },
+    { color: "#80978f", position: [0, -0.6, -2.2] as [number, number, number] },
+    { color: "#2dd4bf", position: [1.6, 1.3, 1.4] as [number, number, number] },
+    { color: "#34d399", position: [-1.7, -1.2, -1.3] as [number, number, number] },
   ]
 
   return (
@@ -67,12 +68,10 @@ const Skills = () => {
   ]
 
   return (
-    <section
-      id="skills"
-      className="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 py-24 px-4 transition-colors duration-300 dark:from-[#030712] dark:to-[#020617]"
-    >
-      <div className="pointer-events-none absolute inset-x-0 top-10 h-48 bg-gradient-to-b from-indigo-300/25 to-transparent blur-3xl dark:from-violet-500/15" />
-      <div className="relative mx-auto max-w-7xl">
+    <section id="skills" className="relative overflow-hidden py-24">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#27cbcb]/30 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-10 h-48 bg-gradient-to-b from-[#26d868]/12 to-transparent blur-3xl" />
+      <PageContainer className="relative">
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -81,9 +80,9 @@ const Skills = () => {
           className="mb-16 text-center"
         >
           <h2 className="mb-4 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl">
-            Skills <span className="bg-gradient-to-r from-cyan-300 to-violet-300 bg-clip-text text-transparent">&amp; stack</span>
+            Skills <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-slate-700 bg-clip-text text-transparent dark:from-[#27cbcb] dark:via-[#26d868] dark:to-[#80978f]">&amp; stack</span>
           </h2>
-          <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" />
+          <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 dark:from-[#27cbcb] dark:to-[#26d868]" />
           <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
             A concise map of the tools I reach for when shipping full-stack products, AI features, and cloud-ready systems.
           </p>
@@ -92,8 +91,8 @@ const Skills = () => {
         <div className="mb-16 h-80">
           <Canvas camera={{ position: [0, 0, 7.5], fov: 55 }}>
             <ambientLight intensity={0.45} />
-            <pointLight position={[8, 8, 6]} intensity={1} color="#67e8f9" />
-            <pointLight position={[-8, -6, -4]} intensity={0.55} color="#c084fc" />
+            <pointLight position={[8, 8, 6]} intensity={1} color="#27cbcb" />
+            <pointLight position={[-8, -6, -4]} intensity={0.55} color="#26d868" />
             <SkillsOrbit />
           </Canvas>
         </div>
@@ -106,7 +105,7 @@ const Skills = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: index * 0.06 }}
               viewport={{ once: true }}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-md shadow-slate-200/70 backdrop-blur transition hover:border-blue-400/40 hover:shadow-lg dark:border-white/10 dark:bg-white/[0.03] dark:shadow-lg dark:shadow-black/30 dark:hover:border-cyan-400/40 dark:hover:bg-white/[0.05]"
+              className="rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-300/40 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-teal-400/40 hover:shadow-xl dark:border-white/10 dark:bg-[#101318]/90 dark:shadow-black/30 dark:hover:border-[#27cbcb]/40"
               whileHover={{ y: -4 }}
             >
               <div className="mb-4 text-center text-3xl">{category.icon}</div>
@@ -114,7 +113,7 @@ const Skills = () => {
               <ul className="space-y-2">
                 {category.skills.map((skill) => (
                   <li key={skill} className="flex items-center text-sm text-slate-700 dark:text-slate-300">
-                    <span className="mr-3 h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                    <span className="mr-3 h-1.5 w-1.5 rounded-full bg-teal-500 dark:bg-[#27cbcb]" />
                     {skill}
                   </li>
                 ))}
@@ -122,7 +121,7 @@ const Skills = () => {
             </motion.div>
           ))}
         </div>
-      </div>
+      </PageContainer>
     </section>
   )
 }

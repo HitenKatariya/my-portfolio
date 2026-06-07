@@ -1,6 +1,8 @@
 export const profile = {
   name: "Hiten Katariya",
   role: "Cloud Engineer & Full Stack Developer",
+  photoUrl: "/profile/hiten.png",
+  handle: "@hitenkatariya",
   location: "Surat, Gujarat",
   phone: "+91 9099590979",
   email: "work.hitenkatariya@gmail.com",

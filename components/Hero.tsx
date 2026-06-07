@@ -1,152 +1,118 @@
 "use client"
 
-import { useRef, useMemo } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import type * as THREE from "three"
-import { useTheme } from "next-themes"
+import { ArrowDown, ArrowRight } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
+import PageContainer from "@/components/PageContainer"
 
-const CoreLattice = () => {
-  const groupRef = useRef<THREE.Group>(null)
-
-  useFrame((state) => {
-    if (!groupRef.current) return
-    groupRef.current.rotation.y += 0.004
-    groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.35) * 0.12
-  })
-
-  return (
-    <group ref={groupRef}>
-      <mesh>
-        <torusKnotGeometry args={[1.35, 0.38, 160, 18]} />
-        <meshStandardMaterial color="#22d3ee" emissive="#0ea5e9" emissiveIntensity={0.35} metalness={0.85} roughness={0.18} wireframe />
-      </mesh>
-      <mesh scale={1.08}>
-        <icosahedronGeometry args={[1.05, 1]} />
-        <meshStandardMaterial color="#a855f7" emissive="#7c3aed" emissiveIntensity={0.2} metalness={0.6} roughness={0.35} transparent opacity={0.22} />
-      </mesh>
-    </group>
-  )
-}
-
-const DataNodes = () => {
-  const nodes = useMemo(
-    () =>
-      Array.from({ length: 18 }, (_, i) => ({
-        position: [(Math.random() - 0.5) * 14, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10] as [number, number, number],
-        scale: Math.random() * 0.12 + 0.05,
-      })),
-    [],
-  )
-
-  return (
-    <>
-      {nodes.map((node, i) => (
-        <mesh key={i} position={node.position} scale={node.scale}>
-          <sphereGeometry args={[1, 16, 16]} />
-          <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={0.6} />
-        </mesh>
-      ))}
-    </>
-  )
-}
+const typingLines = [
+  "Building scalable digital products.",
+  "Connecting frontends with cloud systems.",
+  "Shipping production-ready applications.",
+]
 
 const Hero = () => {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme !== "light"
+  const [lineIndex, setLineIndex] = useState(0)
+  const [charIndex, setCharIndex] = useState(0)
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    const current = typingLines[lineIndex]
+    const delay = deleting ? 28 : 52
+
+    const timer = window.setTimeout(() => {
+      if (!deleting && charIndex < current.length) {
+        setCharIndex((prev) => prev + 1)
+        return
+      }
+
+      if (!deleting && charIndex === current.length) {
+        window.setTimeout(() => setDeleting(true), 1800)
+        return
+      }
+
+      if (deleting && charIndex > 0) {
+        setCharIndex((prev) => prev - 1)
+        return
+      }
+
+      setDeleting(false)
+      setLineIndex((prev) => (prev + 1) % typingLines.length)
+    }, delay)
+
+    return () => window.clearTimeout(timer)
+  }, [charIndex, deleting, lineIndex])
+
+  const typedText = typingLines[lineIndex].slice(0, charIndex)
 
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-100 to-white transition-colors duration-300 dark:from-[#030712] dark:to-[#030712]"
-    >
+    <section id="home" className="relative flex min-h-screen items-center overflow-hidden pb-20 pt-28">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue-300/30 blur-[120px] dark:bg-cyan-500/20" />
-        <div className="absolute bottom-0 right-0 h-[420px] w-[420px] translate-x-1/4 rounded-full bg-indigo-300/30 blur-[110px] dark:bg-violet-600/25" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(71,85,105,0.12)_1px,transparent_0)] [background-size:28px_28px] opacity-60 dark:bg-[radial-gradient(circle_at_1px_1px,rgba(148,163,184,0.12)_1px,transparent_0)] dark:opacity-70" />
+        <div className="absolute left-[20%] top-32 h-80 w-80 rounded-full bg-[#27cbcb]/20 blur-[120px]" />
+        <div className="absolute bottom-16 right-[10%] h-72 w-72 rounded-full bg-[#26d868]/15 blur-[100px]" />
+        <span className="absolute left-[12%] top-[22%] font-mono text-4xl text-white/[0.03]">{`{ }`}</span>
       </div>
 
-      <div className="absolute inset-0 z-0 opacity-80 dark:opacity-90">
-        <Canvas camera={{ position: [0, 0, 9], fov: 55 }}>
-          <color attach="background" args={[isDark ? "#030712" : "#f8fafc"]} />
-          <ambientLight intensity={0.35} />
-          <pointLight position={[8, 8, 8]} intensity={1.1} color="#67e8f9" />
-          <pointLight position={[-8, -6, -4]} intensity={0.55} color="#c084fc" />
-          <CoreLattice />
-          <DataNodes />
-        </Canvas>
-      </div>
+      <PageContainer className="relative z-10 max-w-3xl">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <p className="mb-6 font-mono text-sm sm:text-base">
+            <span className="text-[#27cbcb]">const</span>
+            <span className="text-slate-300">{` developer = "${profile.name}";`}</span>
+          </p>
 
-      <div className="relative z-10 max-w-5xl px-4 text-center">
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-          <motion.h1
-            className="mb-5 text-5xl font-bold tracking-tight text-slate-900 md:text-7xl dark:text-white"
-            initial={{ scale: 0.92 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.75, delay: 0.1 }}
-          >
-            <span className="bg-gradient-to-r from-blue-700 via-slate-800 to-indigo-700 bg-clip-text text-transparent dark:from-cyan-200 dark:via-white dark:to-violet-200">
-              {profile.name}
-            </span>
-          </motion.h1>
-          <motion.p
-            className="mx-auto mb-4 max-w-2xl text-lg text-slate-700 md:text-2xl dark:text-slate-200/90"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-          >
-            {profile.role}
-          </motion.p>
-          <motion.p
-            className="mx-auto mb-10 max-w-2xl text-sm text-slate-600 md:text-base dark:text-slate-400"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.35 }}
-          >
-            MERN · AI/ML · Cloud · Security-minded architecture. Built for clarity, speed, and real-world deployability.
-          </motion.p>
-          <motion.div
-            className="flex flex-wrap items-center justify-center gap-3"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
-          >
+          <h1 className="mb-2 max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[4.25rem]">
+            Cloud Engineer
+            <br />
+            <span className="text-slate-300">&amp; Full Stack Developer</span>
+          </h1>
+
+          <p className="mb-6 min-h-[3.5rem] max-w-2xl text-2xl font-semibold text-slate-500 sm:text-3xl">
+            {typedText}
+            <span className="ml-0.5 inline-block h-[1.1em] w-[2px] animate-pulse bg-[#27cbcb] align-[-0.1em]" />
+          </p>
+
+          <p className="mb-8 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
+            {profile.summary[0]}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4">
             <button
               type="button"
               onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/30 dark:from-cyan-500 dark:to-violet-500 dark:shadow-cyan-500/25 dark:hover:shadow-cyan-500/35"
+              className="inline-flex items-center gap-2 rounded-md bg-[#26d868] px-6 py-3 text-sm font-semibold text-black transition hover:bg-[#2ee070]"
             >
-              Explore projects
+              View Projects
+              <ArrowRight className="h-4 w-4" />
             </button>
             <button
               type="button"
-              onClick={() => document.getElementById("certifications")?.scrollIntoView({ behavior: "smooth" })}
-              className="rounded-full border border-slate-300 bg-white px-8 py-3 text-sm font-semibold text-slate-800 shadow-sm backdrop-blur transition duration-300 hover:scale-[1.02] hover:border-blue-500/50 hover:bg-blue-50 hover:shadow-md dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:border-cyan-400/50 dark:hover:bg-white/10"
+              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="rounded-md border border-white/25 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/5"
             >
-              Certifications
+              Get in Touch
             </button>
-            <a
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-blue-300 bg-blue-50 px-8 py-3 text-sm font-semibold text-blue-700 backdrop-blur transition duration-300 hover:scale-[1.02] hover:border-blue-600/70 hover:bg-blue-100 hover:shadow-md dark:border-cyan-300/30 dark:bg-cyan-500/10 dark:text-cyan-100 dark:hover:border-cyan-200/70 dark:hover:bg-cyan-500/20"
-            >
-              Resume
-            </a>
-          </motion.div>
+            <span className="hidden font-mono text-xs text-slate-600 md:inline">
+              // cloud // full-stack // problem-solver
+            </span>
+          </div>
         </motion.div>
-      </div>
+      </PageContainer>
 
-      <motion.div
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+      <motion.button
+        type="button"
+        aria-label="Scroll to about section"
+        onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/15 bg-white/5 p-3 text-slate-400 backdrop-blur transition hover:border-[#27cbcb]/40 hover:text-[#27cbcb]"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2.2, repeat: Number.POSITIVE_INFINITY }}
       >
-        <div className="flex h-10 w-6 justify-center rounded-full border border-slate-400/40 dark:border-white/25">
-          <div className="mt-2 h-2 w-1 rounded-full bg-slate-600/70 dark:bg-white/60" />
-        </div>
-      </motion.div>
+        <ArrowDown className="h-4 w-4" />
+      </motion.button>
     </section>
   )
 }

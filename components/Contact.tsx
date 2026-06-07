@@ -5,6 +5,8 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Mail, MapPin, Phone, Send } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
+import PageContainer from "@/components/PageContainer"
+import SectionLabel from "@/components/SectionLabel"
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -57,22 +59,21 @@ const Contact = () => {
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-white py-24 px-4 transition-colors duration-300 dark:bg-[#030712]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent dark:via-cyan-400/40" />
-      <div className="relative mx-auto max-w-6xl">
+    <section id="contact" className="relative overflow-hidden py-24">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#27cbcb]/30 to-transparent" />
+      <PageContainer className="relative">
+        <SectionLabel label="contact" />
+
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75 }}
           viewport={{ once: true }}
-          className="mb-14 text-center"
+          className="mb-14"
         >
-          <h2 className="mb-4 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl">
-            Let&apos;s <span className="bg-gradient-to-r from-cyan-300 to-violet-300 bg-clip-text text-transparent">connect</span>
-          </h2>
-          <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" />
-          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-            Have a project, internship, or collaboration in mind? Send a message and I will get back to you as soon as possible.
+          <h2 className="mb-3 text-4xl font-bold text-white md:text-5xl">Let&apos;s work together</h2>
+          <p className="max-w-2xl text-lg text-slate-400">
+            Have an opportunity or project in mind? Send a quick message — I usually respond within 24 hours.
           </p>
         </motion.div>
 
@@ -94,31 +95,31 @@ const Contact = () => {
 
             <div className="space-y-5">
               <motion.div className="flex items-center gap-4" whileHover={{ x: 6 }} transition={{ duration: 0.2 }}>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 dark:bg-cyan-500/15 dark:text-cyan-200">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 dark:bg-[#27cbcb]/15 dark:text-[#27cbcb]">
                   <Mail size={20} />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">Email</p>
-                  <a className="text-sm text-slate-600 transition hover:text-blue-700 dark:text-slate-400 dark:hover:text-cyan-200" href={`mailto:${profile.email}`}>
+                  <a className="text-sm text-slate-600 transition hover:text-teal-700 dark:text-slate-400 dark:hover:text-[#27cbcb]" href={`mailto:${profile.email}`}>
                     {profile.email}
                   </a>
                 </div>
               </motion.div>
 
               <motion.div className="flex items-center gap-4" whileHover={{ x: 6 }} transition={{ duration: 0.2 }}>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 dark:bg-cyan-500/15 dark:text-cyan-200">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 dark:bg-[#27cbcb]/15 dark:text-[#27cbcb]">
                   <Phone size={20} />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">Phone</p>
-                  <a className="text-sm text-slate-600 transition hover:text-blue-700 dark:text-slate-400 dark:hover:text-cyan-200" href={`tel:${profile.phone.replace(/\s/g, "")}`}>
+                  <a className="text-sm text-slate-600 transition hover:text-teal-700 dark:text-slate-400 dark:hover:text-[#27cbcb]" href={`tel:${profile.phone.replace(/\s/g, "")}`}>
                     {profile.phone}
                   </a>
                 </div>
               </motion.div>
 
               <motion.div className="flex items-center gap-4" whileHover={{ x: 6 }} transition={{ duration: 0.2 }}>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 dark:bg-cyan-500/15 dark:text-cyan-200">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 dark:bg-[#27cbcb]/15 dark:text-[#27cbcb]">
                   <MapPin size={20} />
                 </div>
                 <div>
@@ -128,9 +129,9 @@ const Contact = () => {
               </motion.div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-blue-50/80 via-transparent to-indigo-50/80 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:from-cyan-500/10 dark:to-violet-500/10 dark:shadow-none">
+            <div className="rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-300/40 backdrop-blur dark:border-white/10 dark:bg-[#101318]/90 dark:shadow-black/30">
               <p className="text-sm font-semibold text-slate-900 dark:text-white">{profile.name}</p>
-              <p className="text-xs text-blue-700 dark:text-cyan-200/90">{profile.role}</p>
+              <p className="font-mono text-xs text-teal-700 dark:text-[#27cbcb]">{profile.role}</p>
               <p className="mt-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
                 I build cloud-ready, full-stack products with a focus on reliability, performance, and thoughtful user experience.
               </p>
@@ -138,7 +139,7 @@ const Contact = () => {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 32 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.75 }} viewport={{ once: true }}>
-            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/70 backdrop-blur dark:border-white/10 dark:bg-white/[0.02] dark:shadow-xl dark:shadow-black/30">
+            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-300/40 backdrop-blur dark:border-white/10 dark:bg-[#101318]/90 dark:shadow-black/30">
               <div>
                 <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                   Name
@@ -150,7 +151,7 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-blue-400/60 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white dark:focus:border-cyan-400/60"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white dark:focus:border-[#27cbcb]/60"
                   placeholder="Your name"
                 />
               </div>
@@ -166,7 +167,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-blue-400/60 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white dark:focus:border-cyan-400/60"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white dark:focus:border-[#27cbcb]/60"
                   placeholder="you@example.com"
                 />
               </div>
@@ -182,7 +183,7 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-blue-400/60 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white dark:focus:border-cyan-400/60"
+                  className="w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white dark:focus:border-[#27cbcb]/60"
                   placeholder="What are you building?"
                 />
               </div>
@@ -190,7 +191,7 @@ const Contact = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-blue-500/30 dark:from-cyan-500 dark:to-violet-600 dark:shadow-cyan-500/20 dark:hover:shadow-cyan-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-teal-500/30 dark:from-[#27cbcb] dark:to-[#26d868] dark:shadow-[#27cbcb]/20 dark:hover:shadow-[#27cbcb]/30 disabled:cursor-not-allowed disabled:opacity-50"
                 whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
                 whileTap={{ scale: isSubmitting ? 1 : 0.99 }}
               >
@@ -212,7 +213,7 @@ const Contact = () => {
             </form>
           </motion.div>
         </div>
-      </div>
+      </PageContainer>
     </section>
   )
 }

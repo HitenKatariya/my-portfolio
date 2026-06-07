@@ -8,18 +8,24 @@ import Certifications from "@/components/Certifications"
 import Skills from "@/components/Skills"
 import Contact from "@/components/Contact"
 import Footer from "@/components/Footer"
+import PortfolioBackground from "@/components/PortfolioBackground"
+import InteractiveGridCanvas from "@/components/InteractiveGridCanvas"
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#020617] dark:text-white">
+    <main className="relative isolate min-h-screen overflow-x-clip text-white">
+      <PortfolioBackground />
+      <InteractiveGridCanvas />
       <Navbar />
-      <Hero />
-      <About />
-      <Projects />
-      <Certifications />
-      <Skills />
-      <Contact />
-      <Footer />
+      <div className="relative z-10">
+        <Hero />
+        <About />
+        <Projects />
+        <Certifications />
+        <Skills />
+        <Contact />
+        <Footer />
+      </div>
     </main>
   )
 }
