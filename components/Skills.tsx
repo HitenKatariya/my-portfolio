@@ -1,47 +1,7 @@
 "use client"
 
-import { useRef } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
 import { motion } from "framer-motion"
-import type * as THREE from "three"
 import PageContainer from "@/components/PageContainer"
-
-const SkillOrb = ({ position, color }: { position: [number, number, number]; color: string }) => {
-  const meshRef = useRef<THREE.Mesh>(null)
-
-  useFrame((state) => {
-    if (!meshRef.current) return
-    meshRef.current.rotation.y += 0.012
-    meshRef.current.position.x = position[0] + Math.sin(state.clock.elapsedTime + position[0]) * 0.35
-    meshRef.current.position.z = position[2] + Math.cos(state.clock.elapsedTime + position[2]) * 0.35
-  })
-
-  return (
-    <mesh ref={meshRef} position={position}>
-      <sphereGeometry args={[0.55, 28, 28]} />
-      <meshStandardMaterial color={color} metalness={0.75} roughness={0.22} emissive={color} emissiveIntensity={0.18} />
-    </mesh>
-  )
-}
-
-const SkillsOrbit = () => {
-  const nodes = [
-    { color: "#27cbcb", position: [2.4, 0.4, 0] as [number, number, number] },
-    { color: "#26d868", position: [-2.4, -0.2, 0] as [number, number, number] },
-    { color: "#14b8a6", position: [0, 0.6, 2.2] as [number, number, number] },
-    { color: "#80978f", position: [0, -0.6, -2.2] as [number, number, number] },
-    { color: "#2dd4bf", position: [1.6, 1.3, 1.4] as [number, number, number] },
-    { color: "#34d399", position: [-1.7, -1.2, -1.3] as [number, number, number] },
-  ]
-
-  return (
-    <>
-      {nodes.map((node) => (
-        <SkillOrb key={`${node.position.join("-")}`} position={node.position} color={node.color} />
-      ))}
-    </>
-  )
-}
 
 const Skills = () => {
   const skillCategories = [
@@ -88,14 +48,7 @@ const Skills = () => {
           </p>
         </motion.div>
 
-        <div className="mb-16 h-80">
-          <Canvas camera={{ position: [0, 0, 7.5], fov: 55 }}>
-            <ambientLight intensity={0.45} />
-            <pointLight position={[8, 8, 6]} intensity={1} color="#27cbcb" />
-            <pointLight position={[-8, -6, -4]} intensity={0.55} color="#26d868" />
-            <SkillsOrbit />
-          </Canvas>
-        </div>
+
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {skillCategories.map((category, index) => (

@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send } from "lucide-react"
+import { Mail, MapPin, Phone, Send, ArrowUpRight } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 import PageContainer from "@/components/PageContainer"
 import SectionLabel from "@/components/SectionLabel"
@@ -75,6 +75,17 @@ const Contact = () => {
           <p className="max-w-2xl text-lg text-slate-400">
             Have an opportunity or project in mind? Send a quick message — I usually respond within 24 hours.
           </p>
+          <div className="mt-5">
+            <a
+              href="https://drive.google.com/file/d/1DjTyl-Xpae4nf7MzPihbhbDLe1fjG8bY/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#26d868]/40 bg-[#26d868]/5 px-5 py-2.5 text-sm font-semibold text-[#26d868] transition hover:bg-[#26d868]/15"
+            >
+              <span>View Resume</span>
+              <ArrowUpRight size={16} />
+            </a>
+          </div>
         </motion.div>
 
         <div className="grid gap-12 lg:grid-cols-2">

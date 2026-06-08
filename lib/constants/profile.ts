@@ -31,7 +31,7 @@ export const profile = {
       links: [
         {
           label: "Certificate",
-          href: "https://www.nullclass.com/certificates/68569423462d69bac46fd905",
+          href: "https://www.elevanceskills.com/certificates/6a26e32f83ff313ef64b87f3",
         },
         {
           label: "CodeQuest Live",
