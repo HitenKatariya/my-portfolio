@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import type { MouseEvent } from "react"
-import useEmblaCarousel from "embla-carousel-react"
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { ArrowUpRight, ChevronLeft, ChevronRight, Github, Sparkles } from "lucide-react"
 import Image from "next/image"
 import { projects, type ProjectDetail } from "@/lib/content/projects"
@@ -48,6 +47,7 @@ const getTechBadgeLabel = (tech: string) =>
     .split(/\s+/)
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
+
 type ProjectCardProps = {
   project: ProjectDetail
   selected: boolean
@@ -60,8 +60,37 @@ const ProjectCard = ({ project, selected, onOpen, onClick }: ProjectCardProps) =
   const sourceLink = getLinkByPattern(project, /github|source/i)
   const previewText = getPreviewText(project)
 
+  // Motion values for magnetic card hover
+  const mouseX = useMotionValue(0.5)
+  const mouseY = useMotionValue(0.5)
+
+  // Spring physics for smooth magnetic movement
+  const springConfig = { damping: 20, stiffness: 200 }
+  const rotateX = useSpring(useTransform(mouseY, [0, 1], [8, -8]), springConfig)
+  const rotateY = useSpring(useTransform(mouseX, [0, 1], [-8, 8]), springConfig)
+
+  // Spring physics for parallax image movement
+  const imageX = useSpring(useTransform(mouseX, [0, 1], [15, -15]), springConfig)
+  const imageY = useSpring(useTransform(mouseY, [0, 1], [15, -15]), springConfig)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!selected) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width
+    const y = (e.clientY - rect.top) / rect.height
+    mouseX.set(x)
+    mouseY.set(y)
+  }
+
+  const handleMouseLeave = () => {
+    mouseX.set(0.5)
+    mouseY.set(0.5)
+  }
+
   return (
-    <article
+    <motion.article
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={(e) => {
         if (!selected) {
           e.stopPropagation()
@@ -78,10 +107,15 @@ const ProjectCard = ({ project, selected, onOpen, onClick }: ProjectCardProps) =
         }
       }}
       tabIndex={0}
-      className={`group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-3xl border bg-zinc-950/40 backdrop-blur-xl transition-all duration-500 outline-none ${
+      style={{
+        transformStyle: "preserve-3d",
+        rotateX: selected ? rotateX : 0,
+        rotateY: selected ? rotateY : 0,
+      }}
+      className={`group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-3xl border bg-zinc-950/40 backdrop-blur-xl transition-all duration-500 outline-none select-none ${
         selected
-          ? "border-[#27cbcb]/50 shadow-[0_20px_50px_rgba(0,0,0,0.85),_0_0_40px_rgba(39,203,203,0.15)]"
-          : "border-zinc-800/60 opacity-40 hover:opacity-75 hover:border-zinc-700 shadow-md"
+          ? "border-[#27cbcb]/50 shadow-[0_30px_60px_rgba(0,0,0,0.85),_0_0_50px_rgba(39,203,203,0.15)]"
+          : "border-zinc-800/60 opacity-30 hover:opacity-60 hover:border-zinc-700 shadow-md"
       }`}
     >
       {/* Glossy top border highlight */}
@@ -89,20 +123,30 @@ const ProjectCard = ({ project, selected, onOpen, onClick }: ProjectCardProps) =
 
       {/* Hover glow background */}
       {selected && (
-        <div className="absolute -inset-2 -z-10 rounded-3xl bg-gradient-to-r from-[#27cbcb]/10 to-transparent opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+        <div className="absolute -inset-2 -z-10 rounded-3xl bg-gradient-to-r from-[#27cbcb]/8 to-transparent opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
       )}
 
-      {/* Card Hero Image */}
+      {/* Card Hero Image Container */}
       <div className="relative h-48 overflow-hidden sm:h-56">
-        <Image
-          src={project.heroImage}
-          alt={project.title}
-          fill
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 480px"
-          priority={selected}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent" />
+        <motion.div
+          style={{
+            x: selected ? imageX : 0,
+            y: selected ? imageY : 0,
+            scale: selected ? 1.12 : 1.0,
+          }}
+          transition={{ type: "spring", stiffness: 200, damping: 22 }}
+          className="absolute inset-0 w-full h-full"
+        >
+          <Image
+            src={project.heroImage}
+            alt={project.title}
+            fill
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 480px"
+            priority={selected}
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/95 via-zinc-950/20 to-transparent" />
 
         {/* Hover/Access quick actions */}
         <div className="absolute right-4 top-4 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -162,7 +206,7 @@ const ProjectCard = ({ project, selected, onOpen, onClick }: ProjectCardProps) =
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   )
 }
 
@@ -382,7 +426,7 @@ const Projects = () => {
         </motion.div>
 
         {/* 3D Showcase Area Container */}
-        <div className="relative flex items-center justify-center w-full h-[500px] md:h-[580px] overflow-hidden select-none">
+        <div className="relative flex items-center justify-center w-full h-[540px] md:h-[620px] overflow-hidden select-none">
           {/* Navigation Controls */}
           <button
             type="button"
@@ -418,7 +462,13 @@ const Projects = () => {
 
               const absOffset = Math.abs(offset)
               const selected = index === activeIndex
-              const stepX = isMobile ? 130 : 260
+
+              // Coverflow + Stacked card positioning logic
+              const stepX = isMobile ? 120 : 220
+              const stepY = absOffset * (isMobile ? 10 : 18)
+              const stepZ = absOffset * -130
+              const rotateYVal = offset * (isMobile ? -20 : -30)
+              const rotateXVal = absOffset * 6 // Slight tilt back
 
               if (absOffset > 2) return null
 
@@ -428,20 +478,22 @@ const Projects = () => {
                   initial={false}
                   animate={{
                     x: offset * stepX,
-                    scale: selected ? 1 : 0.82,
-                    rotateY: offset * (isMobile ? -25 : -35),
-                    z: absOffset * -160,
+                    y: stepY,
+                    z: stepZ,
+                    scale: selected ? 1.0 : 0.88 - absOffset * 0.08,
+                    rotateY: rotateYVal,
+                    rotateX: rotateXVal,
                     opacity: selected ? 1 : absOffset === 1 ? 0.65 : 0.25,
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 280,
-                    damping: 28,
+                    stiffness: 240,
+                    damping: 25,
                   }}
                   style={{
                     position: "absolute",
-                    width: isMobile ? "290px" : "440px",
-                    height: isMobile ? "440px" : "510px",
+                    width: isMobile ? "290px" : "450px",
+                    height: isMobile ? "440px" : "530px",
                     zIndex: 10 - absOffset,
                     transformStyle: "preserve-3d",
                   }}
@@ -469,6 +521,13 @@ const Projects = () => {
               )
             })}
           </div>
+        </div>
+
+        {/* Carousel Pagination indicator */}
+        <div className="mt-4 flex justify-center items-center gap-1.5 text-xs text-zinc-500 font-mono">
+          <span className="text-[#27cbcb] font-bold">{(activeIndex + 1).toString().padStart(2, "0")}</span>
+          <span className="opacity-40">/</span>
+          <span>{filteredProjects.length.toString().padStart(2, "0")}</span>
         </div>
 
         <Dialog open={!!dialogProject} onOpenChange={(open) => { if (!open) setDialogProject(null) }}>
