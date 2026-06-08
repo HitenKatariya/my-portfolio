@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send, ArrowUpRight } from "lucide-react"
+import { Mail, MapPin, Phone, Send, ArrowUpRight, Calendar } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 import PageContainer from "@/components/PageContainer"
 import SectionLabel from "@/components/SectionLabel"
@@ -136,6 +136,27 @@ const Contact = () => {
                 <div>
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">Location</p>
                   <p className="text-sm text-slate-600 dark:text-slate-400">{profile.location}</p>
+                </div>
+              </motion.div>
+
+              <motion.div className="flex items-center gap-4" whileHover={{ x: 6 }} transition={{ duration: 0.2 }}>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#26d868]/10 text-[#26d868] dark:bg-[#26d868]/15 shadow-[0_0_15px_rgba(38,216,104,0.15)] animate-pulse">
+                  <Calendar size={20} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">Meeting</p>
+                  <a
+                    className="inline-flex items-center gap-2 mt-1.5 rounded-full border border-[#26d868]/30 bg-[#26d868]/10 px-3 py-1 text-xs font-semibold text-[#26d868] transition-all hover:bg-[#26d868]/20 hover:border-[#26d868]/50 shadow-[0_0_15px_rgba(38,216,104,0.1)]"
+                    href="https://cal.com/hiten-katariya-u58etv/30min"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#26d868] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#26d868]"></span>
+                    </span>
+                    <span>Book a 30-min sync</span>
+                  </a>
                 </div>
               </motion.div>
             </div>
