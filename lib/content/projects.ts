@@ -291,4 +291,130 @@ export const projects: ProjectDetail[] = [
       },
     ],
   },
+  {
+    slug: "tickerflow",
+    title: "TickerFlow",
+    tagline: "A fully Dockerized financial data pipeline that decouples external API fetching from data serving. Built with FastAPI, Celery, Redis, PostgreSQL, and Apache Airflow.",
+    role: "Backend / DevOps Engineer",
+    year: "2026",
+    category: "Cloud / Infra",
+    heroImage: "/projects/tickerflow.png",
+    techStack: ["FastAPI", "Celery", "Airflow", "Docker", "PostgreSQL", "Redis"],
+    stack: [
+      "FastAPI",
+      "Celery",
+      "Apache Airflow",
+      "Docker",
+      "Docker Compose",
+      "PostgreSQL",
+      "Redis",
+      "Python 3.11",
+      "SQLAlchemy",
+      "Alpha Vantage API",
+      "NewsAPI",
+    ],
+    links: [{ label: "GitHub", href: "https://github.com/HitenKatariya/tickerflow" }],
+    highlights: [
+      "Decoupled Layered Architecture: Web API reads preprocessed data from PostgreSQL while Celery handles background tasks for stale/missing data, keeping requests fast and responsive.",
+      "Resilient Task Queues: Celery workers manage external API fetches with automatic retries and exponential backoff (up to 3 retries, up to 240s delay).",
+      "Native Database Partitioning: Partitioned stock_history table by month using PostgreSQL native range partitioning to optimize queries and enable automatic partition pruning.",
+      "Apache Airflow Orchestration: Schedules and executes robust, multi-stage ETL DAGs (Extract, Transform, Load) for multiple symbols every 30 minutes in parallel.",
+      "Dockerized Service Stack: Streamlined development and deployment with 6 orchestrated services (API, Worker, Redis, PostgreSQL, Airflow Webserver, Airflow Scheduler).",
+    ],
+    architecture: [
+      "FastAPI (api/) — Serves REST API endpoints and triggers Celery tasks on cache misses",
+      "Celery Workers (workers/) — Fetches real-time stock and news data from external APIs with retry logic",
+      "Redis — Serves as the message broker and task queue for Celery workers",
+      "PostgreSQL — Persists stocks, news articles, and partitioned stock history records",
+      "Apache Airflow (airflow/) — Schedules and runs 3-phase DAG pipelines (Extract, Transform, Load) every 30 minutes",
+    ],
+    readmeSections: [
+      {
+        heading: "API Endpoints",
+        body: [
+          "GET /stocks/{symbol} — Returns the latest stock price. Triggers Celery worker if stale/missing.",
+          "GET /stocks/history/{symbol} — Retrieves historical daily stock prices (supports limit configurations).",
+          "GET /stocks/history/{symbol}/export — Exports historical stock data directly as a downloadable CSV.",
+          "GET /news/{symbol} — Retrieves the latest news articles filtered by ticker symbol.",
+          "GET /news/{symbol}/export — Exports curated articles as a downloadable CSV.",
+          "GET /symbols — Lists all tracked symbols, and GET /health verifies database connectivity.",
+        ],
+      },
+      {
+        heading: "ETL Pipeline Flow",
+        body: [
+          "Phase 1: Extract — Fetches raw quote, daily series, and news articles from Alpha Vantage and NewsAPI.",
+          "Phase 2: Transform — Validates and cleans raw data (positive prices, valid OHLC, valid dates), drops invalid records, and normalizes timestamps.",
+          "Phase 3: Load — Performs bulk upserts for stock history (ON CONFLICT DO UPDATE) and inserts news (ON CONFLICT DO NOTHING) to prevent duplicates.",
+        ],
+      },
+      {
+        heading: "Database Partitioning",
+        body: [
+          "The stock_history table uses PostgreSQL range partitioning on the date column, with 16 monthly partitions pre-created for 2025 Q4 through 2026.",
+          "This guarantees efficient time-range query scaling and automatic partition pruning for long-term data analysis.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "finstream",
+    title: "FinStream",
+    tagline: "AI-Powered Financial Sentiment Intelligence — Real-time financial news sentiment analysis with FastAPI backend, Flask dashboard, and offline evaluation suite.",
+    role: "AI/ML Engineer",
+    year: "2026",
+    category: "AI / ML",
+    heroImage: "/projects/finstream.png",
+    techStack: ["FastAPI", "Flask", "Transformers", "PyTorch", "Render"],
+    stack: [
+      "FastAPI",
+      "Flask",
+      "Transformers",
+      "PyTorch",
+      "Hugging Face Spaces",
+      "Render",
+      "scikit-learn",
+      "Pandas",
+      "Matplotlib",
+      "Bootstrap 5",
+      "Chart.js",
+    ],
+    links: [
+      { label: "GitHub", href: "https://github.com/HitenKatariya/Finstream" },
+      { label: "Live GPU Inference (HF Space)", href: "https://hitenvk22-finstream-api.hf.space" },
+      { label: "Hugging Face Model", href: "https://huggingface.co/hitenvk22/finstream-sentiment" },
+    ],
+    highlights: [
+      "Transformer-Based Sentiment Engine: Real-time inference using a custom fine-tuned sequence classification model (hitenvk22/FinStream-Sentiment) yielding 83.36% test accuracy.",
+      "Dual-Surface Deployment: Modern Bootstrap 5 + Chart.js Flask frontend dashboard proxying requests to Hugging Face Spaces (GPU) with automatic fallback to a FastAPI service on Render (CPU).",
+      "Batch & Single-Text Analysis: Supports instant single-headline prediction and bulk CSV upload flows with automated generation of sentiment net summaries and PDF reports.",
+      "Active Learning & Lifespan Hooks: Injects logging, structured CORS configuration, and FastAPI lifespan optimization to load models into memory (GPU/CPU fallback) at service startup.",
+      "Comprehensive Offline Diagnostics: Includes validation pipelines in Jupyter Notebooks plotting loss graphs and classification reports (precision, recall, F1) across bullish, bearish, and neutral sentiment classes."
+    ],
+    architecture: [
+      "Flask Frontend (frontend/) — Serves dark-mode web app and handles client-side interactive charts and asynchronous file uploads.",
+      "FastAPI Backend (backend/) — Loads the Hugging Face pipeline once at startup, exposing /predict and /health REST endpoints.",
+      "Hugging Face Spaces (GPU) — Primary low-latency backend executing model inference on CUDA hardware (with automatic fallback to Render CPU instance).",
+      "Evaluation Suite (evaluation/) — Pipelines for computing confusion matrices, classification reports, and training history logs."
+    ],
+    readmeSections: [
+      {
+        heading: "API Endpoints",
+        body: [
+          "POST /predict — Accepts a JSON payload containing financial news text and returns predicted sentiment class (bullish/neutral/bearish) and confidence score.",
+          "POST /analyze-csv — Batch processes multiple headlines from CSV files to generate bulk sentiment reports.",
+          "GET /health — Diagnostics endpoint returning service status, loaded model name, and current hardware device (CUDA vs CPU)."
+        ]
+      },
+      {
+        heading: "Model Information",
+        body: [
+          "Base Model: DistilRoBERTa-base (82M parameters).",
+          "Fine-tuned Checkpoint: hitenvk22/FinStream-Sentiment.",
+          "Labels: Bullish, Neutral, Bearish.",
+          "Hardware Acceleration: Configured to utilize CUDA GPU space primary routing, falling back to CPU execution under standard deployments."
+        ]
+      }
+    ],
+  },
 ]

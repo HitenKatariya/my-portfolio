@@ -48,47 +48,71 @@ const getTechBadgeLabel = (tech: string) =>
     .split(/\s+/)
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("") || tech.slice(0, 2).toUpperCase()
-
 type ProjectCardProps = {
   project: ProjectDetail
   selected: boolean
   onOpen: (project: ProjectDetail) => void
+  onClick?: () => void
 }
 
-const ProjectCard = ({ project, selected, onOpen }: ProjectCardProps) => {
+const ProjectCard = ({ project, selected, onOpen, onClick }: ProjectCardProps) => {
   const liveLink = getLinkByPattern(project, /live|demo/i)
   const sourceLink = getLinkByPattern(project, /github|source/i)
   const previewText = getPreviewText(project)
 
   return (
     <article
-      onClick={() => onOpen(project)}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onOpen(project) }}
-      className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border bg-[#0d1117] transition-all duration-300 ${
+      onClick={(e) => {
+        if (!selected) {
+          e.stopPropagation()
+          onClick?.()
+        } else {
+          onOpen(project)
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          if (selected) onOpen(project)
+          else onClick?.()
+        }
+      }}
+      tabIndex={0}
+      className={`group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-3xl border bg-zinc-950/40 backdrop-blur-xl transition-all duration-500 outline-none ${
         selected
-          ? "border-zinc-600 shadow-[0_0_40px_rgba(255,255,255,0.06)]"
-          : "border-zinc-800 opacity-70"
+          ? "border-[#27cbcb]/50 shadow-[0_20px_50px_rgba(0,0,0,0.85),_0_0_40px_rgba(39,203,203,0.15)]"
+          : "border-zinc-800/60 opacity-40 hover:opacity-75 hover:border-zinc-700 shadow-md"
       }`}
     >
-      <div className="relative h-56 overflow-hidden md:h-64">
+      {/* Glossy top border highlight */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+      {/* Hover glow background */}
+      {selected && (
+        <div className="absolute -inset-2 -z-10 rounded-3xl bg-gradient-to-r from-[#27cbcb]/10 to-transparent opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+      )}
+
+      {/* Card Hero Image */}
+      <div className="relative h-48 overflow-hidden sm:h-56">
         <Image
           src={project.heroImage}
           alt={project.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 760px"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 480px"
+          priority={selected}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent" />
 
-        <div className="absolute right-4 top-4 flex gap-2">
+        {/* Hover/Access quick actions */}
+        <div className="absolute right-4 top-4 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           {liveLink && (
             <a
               href={liveLink.href}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.title} live demo`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white backdrop-blur transition hover:border-white/30 hover:bg-white hover:text-black"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white backdrop-blur-md transition hover:scale-105 hover:bg-white hover:text-black"
               onClick={(event) => event.stopPropagation()}
             >
               <ArrowUpRight className="h-4 w-4" />
@@ -100,7 +124,7 @@ const ProjectCard = ({ project, selected, onOpen }: ProjectCardProps) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.title} source code`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white backdrop-blur transition hover:border-white/30 hover:bg-white hover:text-black"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white backdrop-blur-md transition hover:scale-105 hover:bg-white hover:text-black"
               onClick={(event) => event.stopPropagation()}
             >
               <Github className="h-4 w-4" />
@@ -109,41 +133,32 @@ const ProjectCard = ({ project, selected, onOpen }: ProjectCardProps) => {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4 md:p-5">
-        <span className="mb-2 inline-flex w-fit rounded-full border border-zinc-700 bg-zinc-800/80 px-2.5 py-0.5 text-[11px] text-zinc-400">
-          {project.category}
-        </span>
-
-        <h3 className="text-xl font-bold text-white md:text-2xl">{project.title}</h3>
-        <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-zinc-400">{previewText}</p>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.techStack.slice(0, 4).map((tech) => (
-            <span
-              key={tech}
-              title={tech}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-[10px] font-semibold text-zinc-300"
-            >
-              {getTechBadgeLabel(tech)}
-            </span>
-          ))}
+      {/* Card Content */}
+      <div className="flex flex-1 flex-col p-5 sm:p-6 justify-between">
+        <div>
+          <span className="mb-2 inline-flex w-fit rounded-full border border-zinc-700 bg-zinc-900/60 px-3 py-0.5 text-[10px] font-medium tracking-wide uppercase text-[#27cbcb]">
+            {project.category}
+          </span>
+          <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl mt-1 group-hover:text-[#27cbcb] transition-colors duration-300">{project.title}</h3>
+          <p className="mt-2 line-clamp-3 text-xs sm:text-sm leading-relaxed text-zinc-400">{previewText}</p>
         </div>
 
-        <div className="mt-auto pt-4">
-          <div className="flex flex-wrap gap-3 text-sm">
-            {project.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-zinc-300 transition hover:text-white"
-                onClick={(event) => event.stopPropagation()}
+        <div className="mt-4">
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {project.techStack.slice(0, 4).map((tech) => (
+              <span
+                key={tech}
+                title={tech}
+                className="inline-flex items-center rounded-md bg-zinc-900/80 px-2 py-1 text-[10px] font-medium text-zinc-300 border border-zinc-800"
               >
-                <span>{link.label}</span>
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+                {tech}
+              </span>
             ))}
+          </div>
+
+          <div className="flex items-center justify-between border-t border-zinc-800/80 pt-4 text-xs font-semibold text-[#27cbcb] group-hover:text-white transition-colors">
+            <span>Explore Details</span>
+            <ArrowUpRight className="h-4 w-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </div>
         </div>
       </div>
@@ -277,15 +292,10 @@ const ProjectDetailModal = ({ project }: { project: ProjectDetail }) => {
 
 const Projects = () => {
   const [filter, setFilter] = useState<FilterId>("all")
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0)
   const [dialogProject, setDialogProject] = useState<ProjectDetail | null>(null)
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "center",
-    skipSnaps: false,
-    containScroll: false,
-    dragFree: false,
-  })
+  const [isMobile, setIsMobile] = useState(false)
+  const [dragStart, setDragStart] = useState(0)
 
   const filteredProjects = useMemo(() => {
     if (filter === "all") return projects
@@ -293,47 +303,45 @@ const Projects = () => {
   }, [filter])
 
   useEffect(() => {
-    setSelectedIndex(0)
-    if (emblaApi) {
-      emblaApi.scrollTo(0, true)
-      emblaApi.reInit()
-    }
-  }, [emblaApi, filter, filteredProjects.length])
+    setActiveIndex(0)
+  }, [filter, filteredProjects.length])
 
   useEffect(() => {
-    if (!emblaApi) return
-
-    const handleSelect = () => {
-      setSelectedIndex(emblaApi.selectedScrollSnap())
-    }
-
-    handleSelect()
-    emblaApi.on("select", handleSelect)
-    emblaApi.on("reInit", handleSelect)
-
-    return () => {
-      emblaApi.off("select", handleSelect)
-      emblaApi.off("reInit", handleSelect)
-    }
-  }, [emblaApi])
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const scrollPrev = useCallback(() => {
-    emblaApi?.scrollPrev()
-  }, [emblaApi])
+    setActiveIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length)
+  }, [filteredProjects.length])
 
   const scrollNext = useCallback(() => {
-    emblaApi?.scrollNext()
-  }, [emblaApi])
+    setActiveIndex((prev) => (prev + 1) % filteredProjects.length)
+  }, [filteredProjects.length])
 
   const handleFilterChange = (nextFilter: FilterId) => {
     setFilter(nextFilter)
   }
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        scrollPrev()
+      } else if (e.key === "ArrowRight") {
+        scrollNext()
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [scrollPrev, scrollNext])
+
   return (
-    <section id="projects" className="relative overflow-hidden bg-zinc-950 py-20">
+    <section id="projects" className="relative overflow-hidden bg-zinc-950 py-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 top-24 h-48 bg-gradient-to-b from-white/5 to-transparent blur-3xl" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#27cbcb]/10 to-transparent blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#27cbcb]/10 via-transparent to-transparent blur-3xl" />
 
       <PageContainer className="relative">
         <SectionLabel label="projects" />
@@ -345,12 +353,12 @@ const Projects = () => {
           transition={{ duration: 0.65 }}
           className="mb-8"
         >
-          <h2 className="text-4xl font-bold text-white md:text-5xl">Things I&apos;ve Built</h2>
-          <p className="mt-3 max-w-2xl text-slate-400">
+          <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl">Things I&apos;ve Built</h2>
+          <p className="mt-3 max-w-2xl text-zinc-400">
             Real-world projects focused on system design, scalability, and clean engineering.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2.5">
             {filters.map((tab) => {
               const active = filter === tab.id
 
@@ -360,10 +368,10 @@ const Projects = () => {
                   type="button"
                   onClick={() => handleFilterChange(tab.id)}
                   aria-pressed={active}
-                  className={`rounded-full border px-4 py-1 text-sm transition ${
+                  className={`rounded-full border px-5 py-1.5 text-xs font-semibold tracking-wide uppercase transition-all duration-300 ${
                     active
-                      ? "border-[#27cbcb]/40 bg-[#27cbcb]/15 text-white"
-                      : "border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
+                      ? "border-[#27cbcb]/50 bg-[#27cbcb]/15 text-white shadow-[0_0_20px_rgba(39,203,203,0.15)]"
+                      : "border-zinc-800 text-zinc-400 bg-zinc-900/40 hover:border-zinc-600 hover:text-white"
                   }`}
                 >
                   {tab.label}
@@ -373,42 +381,93 @@ const Projects = () => {
           </div>
         </motion.div>
 
-        <div className="relative">
+        {/* 3D Showcase Area Container */}
+        <div className="relative flex items-center justify-center w-full h-[500px] md:h-[580px] overflow-hidden select-none">
+          {/* Navigation Controls */}
           <button
             type="button"
             onClick={scrollPrev}
             aria-label="Previous project"
-            className="absolute left-0 top-1/2 z-20 hidden h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white backdrop-blur transition hover:border-white/30 hover:bg-white hover:text-black md:inline-flex"
+            className="absolute left-2 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white backdrop-blur-md transition hover:scale-105 hover:border-[#27cbcb]/40 hover:bg-[#27cbcb]/10 focus:outline-none md:left-4"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-6 w-6" />
           </button>
 
           <button
             type="button"
             onClick={scrollNext}
             aria-label="Next project"
-            className="absolute right-0 top-1/2 z-20 hidden h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white backdrop-blur transition hover:border-white/30 hover:bg-white hover:text-black md:inline-flex"
+            className="absolute right-2 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white backdrop-blur-md transition hover:scale-105 hover:border-[#27cbcb]/40 hover:bg-[#27cbcb]/10 focus:outline-none md:right-4"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-6 w-6" />
           </button>
 
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex items-stretch py-2">
-              {filteredProjects.map((project, index) => {
-                const selected = index === selectedIndex
+          {/* 3D Showcase Perspective Box */}
+          <div
+            className="relative w-full h-full flex items-center justify-center"
+            style={{
+              perspective: "1200px",
+              transformStyle: "preserve-3d"
+            }}
+          >
+            {filteredProjects.map((project, index) => {
+              let offset = index - activeIndex
+              const len = filteredProjects.length
+              if (offset > Math.floor(len / 2)) offset -= len
+              if (offset < -Math.floor(len / 2)) offset += len
 
-                return (
-                  <div
-                    key={project.slug}
-                    className="min-w-0 flex-[0_0_100%] px-3 sm:flex-[0_0_92%] md:flex-[0_0_72%] lg:flex-[0_0_64%] xl:flex-[0_0_58%]"
-                  >
-                    <div className={`transition-all duration-300 ${selected ? "scale-100 opacity-100" : "scale-[0.96] opacity-70"}`}>
-                      <ProjectCard project={project} selected={selected} onOpen={setDialogProject} />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+              const absOffset = Math.abs(offset)
+              const selected = index === activeIndex
+              const stepX = isMobile ? 130 : 260
+
+              if (absOffset > 2) return null
+
+              return (
+                <motion.div
+                  key={project.slug}
+                  initial={false}
+                  animate={{
+                    x: offset * stepX,
+                    scale: selected ? 1 : 0.82,
+                    rotateY: offset * (isMobile ? -25 : -35),
+                    z: absOffset * -160,
+                    opacity: selected ? 1 : absOffset === 1 ? 0.65 : 0.25,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 280,
+                    damping: 28,
+                  }}
+                  style={{
+                    position: "absolute",
+                    width: isMobile ? "290px" : "440px",
+                    height: isMobile ? "440px" : "510px",
+                    zIndex: 10 - absOffset,
+                    transformStyle: "preserve-3d",
+                  }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.4}
+                  onDragStart={(e, info) => setDragStart(info.point.x)}
+                  onDragEnd={(e, info) => {
+                    const threshold = 60
+                    const dragDistance = info.point.x - dragStart
+                    if (dragDistance > threshold) {
+                      scrollPrev()
+                    } else if (dragDistance < -threshold) {
+                      scrollNext()
+                    }
+                  }}
+                >
+                  <ProjectCard
+                    project={project}
+                    selected={selected}
+                    onOpen={setDialogProject}
+                    onClick={() => setActiveIndex(index)}
+                  />
+                </motion.div>
+              )
+            })}
           </div>
         </div>
 
