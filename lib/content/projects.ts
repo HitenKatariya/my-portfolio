@@ -8,6 +8,7 @@ export type ProjectDetail = {
   year: string
   category: "Full stack" | "Cloud / Infra" | "AI / ML"
   heroImage: string
+  techStack: string[]
   stack: string[]
   links: ProjectLink[]
   highlights: string[]
@@ -24,6 +25,7 @@ export const projects: ProjectDetail[] = [
     year: "2026",
     category: "AI / ML",
     heroImage: "/projects/ai-health-assistant.png",
+    techStack: ["React", "Express", "MongoDB", "Groq"],
     stack: [
       "React 19",
       "Vite",
@@ -99,6 +101,7 @@ export const projects: ProjectDetail[] = [
     year: "2025",
     category: "Full stack",
     heroImage: "/projects/premier-product.png",
+    techStack: ["React", "Express", "MongoDB", "JWT"],
     stack: ["React 19", "Vite 7", "TailwindCSS", "Node.js", "Express", "MongoDB", "Mongoose", "JWT", "Axios"],
     links: [
       { label: "Live site", href: "https://premier-product.vercel.app" },
@@ -147,6 +150,7 @@ export const projects: ProjectDetail[] = [
     year: "2025",
     category: "Full stack",
     heroImage: "/projects/codequest.png",
+    techStack: ["React", "Redux", "Node", "Cloudinary"],
     stack: ["React (CRA)", "Redux + Thunk", "React Router", "Axios", "Node.js", "Express", "MongoDB", "Cloudinary", "JWT", "Twilio", "AI providers"],
     links: [
       { label: "Live app", href: "https://codequest-wheat.vercel.app" },
@@ -187,6 +191,7 @@ export const projects: ProjectDetail[] = [
     year: "2025",
     category: "Full stack",
     heroImage: "/projects/codequest-backend.png",
+    techStack: ["Node", "Express", "MongoDB", "Twilio"],
     stack: ["Node.js 20", "Express", "MongoDB", "Mongoose", "Cloudinary", "Multer", "JWT", "Twilio", "AI SDKs"],
     links: [
       { label: "Frontend (Vercel)", href: "https://codequest-wheat.vercel.app" },
@@ -218,6 +223,7 @@ export const projects: ProjectDetail[] = [
     year: "2026",
     category: "AI / ML",
     heroImage: "/projects/ai-social.png",
+    techStack: ["FastAPI", "Python", "SDXL", "React"],
     stack: ["FastAPI", "Python 3.11", "Hugging Face Inference", "Flan-T5", "Stable Diffusion XL", "React 19", "Vite", "Streamlit", "Prometheus"],
     links: [{ label: "GitHub", href: "https://github.com/HitenKatariya/MarketingAndAds" }],
     highlights: [
@@ -255,6 +261,7 @@ export const projects: ProjectDetail[] = [
     year: "2026",
     category: "Cloud / Infra",
     heroImage: "/projects/aws-3tier.png",
+    techStack: ["AWS", "EC2", "VPC", "MySQL"],
     stack: ["AWS VPC", "EC2", "Nginx", "Apache Tomcat", "MySQL", "NAT Gateway", "Internet Gateway", "Route Tables"],
     links: [{ label: "GitHub", href: "https://github.com/HitenKatariya/aws-3tier-architecture" }],
     highlights: [
