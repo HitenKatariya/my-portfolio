@@ -42,8 +42,8 @@ const About = () => {
             transition={{ duration: 0.75 }}
             className="space-y-6"
           >
-            <div className="relative mx-auto w-full max-w-sm lg:mx-0">
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#101318]/90">
+            <div className="relative mx-auto w-full max-w-sm lg:mx-0 group">
+              <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#101318]/90 transition-all duration-500 ease-out group-hover:border-[#27cbcb]/30 group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8),_0_0_50px_0_rgba(39,203,203,0.05)] group-hover:-translate-y-2">
                 <div className="border-b border-white/10 px-6 py-5">
                   <p className="text-lg font-semibold text-[#26d868]">{profile.name}</p>
                   <p className="font-mono text-sm text-[#27cbcb]">{profile.role}</p>
@@ -54,17 +54,17 @@ const About = () => {
                     src={profile.photoUrl}
                     alt={profile.name}
                     fill
-                    className="object-cover object-top"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-translate-y-2"
                     sizes="(max-width: 1024px) 90vw, 380px"
                     priority
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#101318]/80 via-transparent to-[#27cbcb]/10" />
                 </div>
 
-                <div className="border-t border-white/10 p-4">
-                  <div className="-mt-10 mx-4 rounded-xl border border-white/10 bg-[#0d1016]/95 p-4 backdrop-blur">
+                <div className="border-t border-white/10 p-4 pb-6 transition-all duration-500">
+                  <div className="-mt-10 mx-4 rounded-xl border border-white/10 bg-[#0d1016]/95 p-4 backdrop-blur transition-all duration-500 ease-out group-hover:-translate-y-4 group-hover:border-[#26d868]/30 group-hover:shadow-[0_10px_30px_-10px_rgba(38,216,104,0.15)]">
                     <div className="mb-3 flex items-center gap-3">
-                      <div className="relative h-10 w-10 overflow-hidden rounded-full border border-white/10">
+                      <div className="relative h-10 w-10 overflow-hidden rounded-full border border-white/10 transition-transform duration-500 group-hover:scale-105">
                         <Image
                           src={profile.photoUrl}
                           alt={profile.name}
@@ -85,24 +85,27 @@ const About = () => {
                     >
                       Let&apos;s Connect
                     </button>
-                  </div>
 
-                  <div className="mt-8 flex justify-center gap-3">
-                    {profile.social.map((item) => {
-                      const Icon = iconMap[item.icon]
-                      return (
-                        <a
-                          key={item.label}
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={item.label}
-                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:border-[#27cbcb]/40 hover:text-[#27cbcb]"
-                        >
-                          <Icon className="h-4 w-4" />
-                        </a>
-                      )
-                    })}
+                    {/* Staggered Content Reveal on Hover */}
+                    <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-out group-hover:max-h-[60px] group-hover:opacity-100 group-hover:mt-4">
+                      <div className="flex justify-center gap-3 border-t border-white/5 pt-3">
+                        {profile.social.map((item) => {
+                          const Icon = iconMap[item.icon]
+                          return (
+                            <a
+                              key={item.label}
+                              href={item.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={item.label}
+                              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:border-[#27cbcb]/40 hover:text-[#27cbcb] hover:scale-105"
+                            >
+                              <Icon className="h-4 w-4" />
+                            </a>
+                          )
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
