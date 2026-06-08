@@ -6,6 +6,7 @@ export type ProjectDetail = {
   tagline: string
   role: string
   year: string
+  category: "Full stack" | "Cloud / Infra" | "AI / ML"
   heroImage: string
   stack: string[]
   links: ProjectLink[]
@@ -21,6 +22,7 @@ export const projects: ProjectDetail[] = [
     tagline: "Multi-app healthcare workspace — AI triage, nearby hospitals, appointments, and a hospital dashboard.",
     role: "Full Stack (React 19 · Vite · Node · Express · MongoDB · Groq)",
     year: "2026",
+    category: "AI / ML",
     heroImage: "/projects/ai-health-assistant.png",
     stack: [
       "React 19",
@@ -95,6 +97,7 @@ export const projects: ProjectDetail[] = [
     tagline: "Full-stack e-commerce for a brass-parts client — SGP III flagship build.",
     role: "Full Stack (React · Vite · Node · MongoDB)",
     year: "2025",
+    category: "Full stack",
     heroImage: "/projects/premier-product.png",
     stack: ["React 19", "Vite 7", "TailwindCSS", "Node.js", "Express", "MongoDB", "Mongoose", "JWT", "Axios"],
     links: [
@@ -142,6 +145,7 @@ export const projects: ProjectDetail[] = [
     tagline: "MERN Q&A platform with social graph features and an AI-assisted authoring flow.",
     role: "Full Stack (React · Redux · Node · MongoDB)",
     year: "2025",
+    category: "Full stack",
     heroImage: "/projects/codequest.png",
     stack: ["React (CRA)", "Redux + Thunk", "React Router", "Axios", "Node.js", "Express", "MongoDB", "Cloudinary", "JWT", "Twilio", "AI providers"],
     links: [
@@ -181,6 +185,7 @@ export const projects: ProjectDetail[] = [
     tagline: "Hardened Node API layer for CodeQuest — media, OTP, and multi-provider AI.",
     role: "Backend Engineer",
     year: "2025",
+    category: "Full stack",
     heroImage: "/projects/codequest-backend.png",
     stack: ["Node.js 20", "Express", "MongoDB", "Mongoose", "Cloudinary", "Multer", "JWT", "Twilio", "AI SDKs"],
     links: [
@@ -211,6 +216,7 @@ export const projects: ProjectDetail[] = [
     tagline: "Marketing-grade captions, hashtags, and SDXL imagery from a single creative brief.",
     role: "AI/ML + Full Stack",
     year: "2026",
+    category: "AI / ML",
     heroImage: "/projects/ai-social.png",
     stack: ["FastAPI", "Python 3.11", "Hugging Face Inference", "Flan-T5", "Stable Diffusion XL", "React 19", "Vite", "Streamlit", "Prometheus"],
     links: [{ label: "GitHub", href: "https://github.com/HitenKatariya/MarketingAndAds" }],
@@ -247,6 +253,7 @@ export const projects: ProjectDetail[] = [
     tagline: "Secure web, app, and database tiers on a custom VPC with controlled routing.",
     role: "Cloud Architecture · AWS",
     year: "2026",
+    category: "Cloud / Infra",
     heroImage: "/projects/aws-3tier.png",
     stack: ["AWS VPC", "EC2", "Nginx", "Apache Tomcat", "MySQL", "NAT Gateway", "Internet Gateway", "Route Tables"],
     links: [{ label: "GitHub", href: "https://github.com/HitenKatariya/aws-3tier-architecture" }],

@@ -26,32 +26,20 @@ export const profile = {
   experience: [
     {
       company: "NullClass Edtech Pvt. Ltd.",
-      role: "Web Development Intern (Remote)",
-      period: "June 2025",
-      link: {
-        label: "Certificate",
-        href: "https://www.nullclass.com/certificates/68569423462d69bac46fd905",
-      },
-      points: [
-        "Completed a Web Development internship with hands-on experience in full-stack development.",
-        "Built and deployed real-world web applications using modern technologies.",
-        "Demonstrated strong problem-solving, teamwork, and communication skills.",
+      role: "Web Development Intern",
+      period: "16 May 2025 - 16 June 2025",
+      links: [
+        {
+          label: "Certificate",
+          href: "https://www.nullclass.com/certificates/68569423462d69bac46fd905",
+        },
+        {
+          label: "CodeQuest Live",
+          href: "https://codequest-wheat.vercel.app",
+        },
       ],
-    },
-    {
-      company: "CodeQuest - AI-powered Q&A Platform",
-      role: "Full Stack Developer Intern Project",
-      period: "2025",
-      link: {
-        label: "Live Link",
-        href: "https://codequest-wheat.vercel.app",
-      },
-      points: [
-        "Built a MERN-based Q&A platform with authentication, feed, profiles, friends, and teams.",
-        "Developed a secure AI assistant using backend proxy with Groq, Gemini, and OpenAI support.",
-        "Implemented rate limiting and Cloudinary integration for scalable media handling.",
-        "Deployed the application using Render and Vercel with CI/CD via GitHub Actions.",
-      ],
+      description:
+        "Completed a Web Development Internship at NullClass Edtech Pvt. Ltd., gaining hands-on experience in full-stack development and modern web technologies. As a key internship project, developed 'CodeQuest' - an AI-powered MERN-stack Q&A platform featuring authentication, user profiles, feeds, team collaboration, media handling, and AI integration using OpenAI, Gemini, and Groq APIs. Implemented secure backend architecture, rate limiting, and scalable cloud-based media management while strengthening problem-solving, teamwork, and software development skills.",
     },
   ],
 } as const

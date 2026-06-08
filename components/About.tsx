@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion"
 import Image from "next/image"
 import { useRef } from "react"
-import { Briefcase, ExternalLink, Github, GraduationCap, Instagram, Linkedin, MapPin, Phone } from "lucide-react"
+import { Github, Instagram, Linkedin, MapPin, Phone } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 import PageContainer from "@/components/PageContainer"
 import SectionLabel from "@/components/SectionLabel"
@@ -13,6 +13,18 @@ const iconMap = {
   github: Github,
   instagram: Instagram,
 } as const
+
+const getCompanyInitials = (company: string) =>
+  company
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase() ?? "")
+    .join("")
+
+const getDisplayRole = (role: string) => role.replace(/\s*\(([^)]+)\)\s*$/, "")
+
+const getWorkType = (role: string) => role.match(/\(([^)]+)\)/)?.[1]
 
 const About = () => {
   const ref = useRef(null)
@@ -28,68 +40,70 @@ const About = () => {
             initial={{ opacity: 0, x: -28 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 }}
             transition={{ duration: 0.75 }}
-            className="relative mx-auto w-full max-w-sm lg:mx-0"
+            className="space-y-6"
           >
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#101318]/90">
-              <div className="border-b border-white/10 px-6 py-5">
-                <p className="text-lg font-semibold text-[#26d868]">{profile.name}</p>
-                <p className="font-mono text-sm text-[#27cbcb]">{profile.role}</p>
-              </div>
-
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-[#0f141c] to-[#101318]">
-                <Image
-                  src={profile.photoUrl}
-                  alt={profile.name}
-                  fill
-                  className="object-cover object-top"
-                  sizes="(max-width: 1024px) 90vw, 380px"
-                  priority
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#101318]/80 via-transparent to-[#27cbcb]/10" />
-              </div>
-
-              <div className="border-t border-white/10 p-4">
-                <div className="-mt-10 mx-4 rounded-xl border border-white/10 bg-[#0d1016]/95 p-4 backdrop-blur">
-                  <div className="mb-3 flex items-center gap-3">
-                    <div className="relative h-10 w-10 overflow-hidden rounded-full border border-white/10">
-                      <Image
-                        src={profile.photoUrl}
-                        alt={profile.name}
-                        fill
-                        className="object-cover object-top"
-                        sizes="40px"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-mono text-sm text-[#27cbcb]">{profile.handle}</p>
-                      <p className="text-xs text-slate-500">{profile.location}</p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                    className="w-full rounded-lg border border-[#26d868]/40 py-2.5 text-sm font-semibold text-[#26d868] transition hover:bg-[#26d868]/10"
-                  >
-                    Let&apos;s Connect
-                  </button>
+            <div className="relative mx-auto w-full max-w-sm lg:mx-0">
+              <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#101318]/90">
+                <div className="border-b border-white/10 px-6 py-5">
+                  <p className="text-lg font-semibold text-[#26d868]">{profile.name}</p>
+                  <p className="font-mono text-sm text-[#27cbcb]">{profile.role}</p>
                 </div>
 
-                <div className="mt-8 flex justify-center gap-3">
-                  {profile.social.map((item) => {
-                    const Icon = iconMap[item.icon]
-                    return (
-                      <a
-                        key={item.label}
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={item.label}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:border-[#27cbcb]/40 hover:text-[#27cbcb]"
-                      >
-                        <Icon className="h-4 w-4" />
-                      </a>
-                    )
-                  })}
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-[#0f141c] to-[#101318]">
+                  <Image
+                    src={profile.photoUrl}
+                    alt={profile.name}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 1024px) 90vw, 380px"
+                    priority
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#101318]/80 via-transparent to-[#27cbcb]/10" />
+                </div>
+
+                <div className="border-t border-white/10 p-4">
+                  <div className="-mt-10 mx-4 rounded-xl border border-white/10 bg-[#0d1016]/95 p-4 backdrop-blur">
+                    <div className="mb-3 flex items-center gap-3">
+                      <div className="relative h-10 w-10 overflow-hidden rounded-full border border-white/10">
+                        <Image
+                          src={profile.photoUrl}
+                          alt={profile.name}
+                          fill
+                          className="object-cover object-top"
+                          sizes="40px"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-mono text-sm text-[#27cbcb]">{profile.handle}</p>
+                        <p className="text-xs text-slate-500">{profile.location}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                      className="w-full rounded-lg border border-[#26d868]/40 py-2.5 text-sm font-semibold text-[#26d868] transition hover:bg-[#26d868]/10"
+                    >
+                      Let&apos;s Connect
+                    </button>
+                  </div>
+
+                  <div className="mt-8 flex justify-center gap-3">
+                    {profile.social.map((item) => {
+                      const Icon = iconMap[item.icon]
+                      return (
+                        <a
+                          key={item.label}
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={item.label}
+                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:border-[#27cbcb]/40 hover:text-[#27cbcb]"
+                        >
+                          <Icon className="h-4 w-4" />
+                        </a>
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -116,7 +130,7 @@ const About = () => {
             </div>
 
             <div className="max-w-2xl rounded-xl border border-white/10 bg-[#101318]/60 p-5">
-              <p className="text-base italic leading-relaxed text-slate-400">
+              <p className="text-base leading-relaxed text-slate-400">
                 &ldquo;{profile.summary[1]}&rdquo;
               </p>
             </div>
@@ -155,74 +169,93 @@ const About = () => {
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-          transition={{ duration: 0.75, delay: 0.2 }}
-          className="mt-14 grid items-start gap-6 lg:grid-cols-2"
+        <motion.section
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+          transition={{ duration: 0.75, delay: 0.15 }}
+          className="mt-14 rounded-2xl border border-white/10 bg-[#101318]/90 p-5 md:p-6"
         >
-          <div className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#101318]/70 p-6">
-            <div className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-[#27cbcb]">
-              <GraduationCap className="h-4 w-4" />
-              Education
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-base font-semibold text-white">{profile.education.degree}</p>
-              <p className="mt-1 text-sm text-slate-400">{profile.education.institution}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-slate-400">
-                <p>
-                  Current GPA: <span className="font-semibold text-white">{profile.education.currentGpa}</span>
-                </p>
-                <p>
-                  Expected Graduation: <span className="font-semibold text-white">{profile.education.expectedGraduation}</span>
-                </p>
-              </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-6">
+            <p className="mb-3 text-lg font-bold text-white">Education</p>
+            <div className="space-y-2">
+              <p className="text-base font-semibold text-white md:text-lg">{profile.education.degree}</p>
+              <p className="text-sm text-slate-400">{profile.education.institution}</p>
+              <p className="text-sm font-medium text-[#27cbcb]">
+                Current GPA: {profile.education.currentGpa} · Expected Graduation: {profile.education.expectedGraduation}
+              </p>
             </div>
           </div>
+        </motion.section>
 
-          <div className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#101318]/70 p-6">
-            <div className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-[#27cbcb]">
-              <Briefcase className="h-4 w-4" />
-              Experience
-            </div>
-            <div className="space-y-4">
-              {profile.experience.map((item) => (
-                <div key={item.company} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <p className="text-base font-semibold text-white">{item.company}</p>
-                      <p className="text-sm italic text-slate-400">{item.role}</p>
+        <motion.section
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+          transition={{ duration: 0.75, delay: 0.25 }}
+          className="mt-10 rounded-2xl border border-white/10 bg-[#101318]/90 p-5 md:p-6"
+        >
+          <div className="flex items-center gap-4">
+            <span className="h-px w-12 shrink-0 bg-white/90 sm:w-16" />
+            <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white md:text-4xl">WORK EXPERIENCE</h2>
+          </div>
+
+          <div className="mt-8 space-y-4">
+            {profile.experience.map((item) => {
+              const workType = getWorkType(item.role)
+              const displayRole = getDisplayRole(item.role)
+              const initials = getCompanyInitials(item.company)
+
+              return (
+                <article
+                  key={item.company}
+                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-6"
+                >
+                  <div className="flex flex-col gap-4 md:flex-row md:gap-5">
+                    <div className="flex min-w-0 flex-1 gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-zinc-900">
+                        {initials}
+                      </div>
+
+                      <div className="min-w-0 flex-1 space-y-2.5">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="min-w-0">
+                            <p className="text-xl font-semibold text-white">{item.company}</p>
+                            <p className="mt-1 text-sm text-slate-400">{displayRole}</p>
+                            {workType && <p className="mt-1 text-xs text-slate-500">{workType}</p>}
+                          </div>
+
+                          <span className="inline-flex self-start rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 font-mono text-xs text-zinc-300">
+                            {item.period}
+                          </span>
+                        </div>
+
+                        <p className="max-w-4xl text-sm leading-6 text-slate-400 line-clamp-3">
+                          {item.description}
+                        </p>
+
+                        {item.links && (
+                          <div className="flex flex-wrap items-center gap-3 pt-1">
+                            <span className="text-sm font-medium text-slate-500">View Documents:</span>
+                            {item.links.map((link) => (
+                              <a
+                                key={link.href}
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center rounded-full border border-zinc-700 px-4 py-1 text-sm text-slate-300 transition hover:bg-zinc-800"
+                              >
+                                {link.label}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <span className="rounded-full border border-[#27cbcb]/20 bg-[#27cbcb]/10 px-2.5 py-1 font-mono text-[11px] text-[#27cbcb]">
-                      {item.period}
-                    </span>
                   </div>
-
-                  <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-slate-300">
-                    {item.points.map((point) => (
-                      <li key={point} className="flex gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#27cbcb]" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {item.link && (
-                    <a
-                      href={item.link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[#27cbcb] transition hover:text-[#26d868]"
-                    >
-                      {item.link.label}
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
+                </article>
+              )
+            })}
           </div>
-        </motion.div>
+        </motion.section>
       </PageContainer>
     </section>
   )
