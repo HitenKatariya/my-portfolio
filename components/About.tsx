@@ -1,9 +1,9 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { motion, useInView, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { useRef } from "react"
-import { Github, Instagram, Linkedin, MapPin, Phone } from "lucide-react"
+import { useState, useRef } from "react"
+import { ChevronDown, Github, Instagram, Linkedin, MapPin, Phone } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 import PageContainer from "@/components/PageContainer"
 import SectionLabel from "@/components/SectionLabel"
@@ -29,6 +29,7 @@ const getWorkType = (role: string) => role.match(/\(([^)]+)\)/)?.[1]
 const About = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [expandedCompany, setExpandedCompany] = useState<string | null>(null)
 
   return (
     <section id="about" className="relative overflow-hidden py-24">
@@ -206,17 +207,30 @@ const About = () => {
               const workType = getWorkType(item.role)
               const displayRole = getDisplayRole(item.role)
               const initials = getCompanyInitials(item.company)
+              const expanded = expandedCompany === item.company
 
               return (
                 <article
                   key={item.company}
-                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-6"
+                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition hover:border-[#27cbcb]/20 md:p-6"
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:gap-5">
                     <div className="flex min-w-0 flex-1 gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-zinc-900">
-                        {initials}
-                      </div>
+                      {item.company.includes("NullClass") ? (
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-white shadow-lg">
+                          <Image
+                            src="/nullClass_logo.jpg"
+                            alt="NullClass"
+                            fill
+                            className="object-cover"
+                            sizes="48px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-zinc-900">
+                          {initials}
+                        </div>
+                      )}
 
                       <div className="min-w-0 flex-1 space-y-2.5">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -231,9 +245,85 @@ const About = () => {
                           </span>
                         </div>
 
-                        <p className="max-w-4xl text-sm leading-6 text-slate-400 line-clamp-3">
+                        <p className={`max-w-4xl text-sm leading-6 text-slate-400 ${expanded ? "" : "line-clamp-3"}`}>
                           {item.description}
                         </p>
+
+                        {"techBreakdown" in item && item.techBreakdown && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setExpandedCompany(expanded ? null : item.company)}
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#27cbcb] transition hover:text-[#26d868]"
+                            >
+                              {expanded ? "Show less" : "Technical breakdown"}
+                              <motion.span
+                                animate={{ rotate: expanded ? 180 : 0 }}
+                                transition={{ duration: 0.25 }}
+                              >
+                                <ChevronDown size={14} />
+                              </motion.span>
+                            </button>
+
+                            <AnimatePresence initial={false}>
+                              {expanded && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="mt-3 space-y-4 border-t border-white/10 pt-4">
+                                    <div>
+                                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-slate-500">Summary</p>
+                                      <p className="text-sm leading-relaxed text-slate-300">{item.techBreakdown.workSummary}</p>
+                                    </div>
+                                    <div>
+                                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-slate-500">Architecture</p>
+                                      <ul className="space-y-1">
+                                        {item.techBreakdown.architecture.map((point: string) => (
+                                          <li key={point} className="flex items-start gap-2 text-sm text-slate-400">
+                                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#27cbcb]" />
+                                            {point}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-slate-500">Stack</p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {item.techBreakdown.stack.map((tech: string) => (
+                                          <span
+                                            key={tech}
+                                            className="rounded-full border border-zinc-700 bg-zinc-800/60 px-2.5 py-0.5 font-mono text-[11px] text-slate-300"
+                                          >
+                                            {tech}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-slate-500">Challenges Solved</p>
+                                      <ul className="space-y-1">
+                                        {item.techBreakdown.challenges.map((challenge: string) => (
+                                          <li key={challenge} className="flex items-start gap-2 text-sm text-slate-400">
+                                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#26d868]" />
+                                            {challenge}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-slate-500">Impact</p>
+                                      <p className="text-sm leading-relaxed text-slate-300">{item.techBreakdown.impact}</p>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </>
+                        )}
 
                         {item.links && (
                           <div className="flex flex-wrap items-center gap-3 pt-1">

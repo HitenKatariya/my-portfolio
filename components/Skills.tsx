@@ -1,79 +1,155 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import PageContainer from "@/components/PageContainer"
+import SectionLabel from "@/components/SectionLabel"
+import SkillCard from "@/components/SkillCard"
+import { logoMap } from "@/components/SkillLogos"
+import { skillCategories } from "@/lib/content/skills"
+
+type FilterId = "frontend" | "backend" | "database" | "tools-devops" | "ai-ml"
+
+const filters: { id: FilterId; label: string }[] = [
+  { id: "frontend", label: "Frontend" },
+  { id: "backend", label: "Backend" },
+  { id: "database", label: "Database" },
+  { id: "tools-devops", label: "Tools & DevOps" },
+  { id: "ai-ml", label: "AI & ML" },
+]
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { staggerChildren: 0.03, staggerDirection: -1 },
+  },
+}
 
 const Skills = () => {
-  const skillCategories = [
-    {
-      title: "Frontend",
-      icon: "⚛️",
-      skills: ["React 19", "Vite", "Redux + Thunk", "TailwindCSS", "Responsive UX", "Design systems"],
-    },
-    {
-      title: "Backend & APIs",
-      icon: "🛰️",
-      skills: ["Node.js", "Express", "REST design", "JWT auth", "MongoDB + Mongoose", "FastAPI"],
-    },
-    {
-      title: "AI / ML",
-      icon: "🤖",
-      skills: ["Model integration", "HF Inference", "Prompt + caption pipelines", "Image gen (SDXL)", "Evaluation mindset"],
-    },
-    {
-      title: "Cloud & Security",
-      icon: "☁️",
-      skills: ["AWS VPC patterns", "EC2 tiers", "DevOps basics", "Secrets hygiene", "Cryptography awareness"],
-    },
-  ]
+  const [activeFilter, setActiveFilter] = useState<FilterId>("frontend")
+
+  const visibleCategories = skillCategories.filter((c) => c.id === activeFilter)
 
   return (
     <section id="skills" className="relative overflow-hidden py-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#27cbcb]/30 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 top-10 h-48 bg-gradient-to-b from-[#26d868]/12 to-transparent blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(ellipse_at_50%_0%,rgba(39,203,203,0.06),transparent_60%)]" />
+
       <PageContainer className="relative">
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.75 }}
-          className="mb-16 text-center"
+          transition={{ duration: 0.7 }}
         >
-          <h2 className="mb-4 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl">
-            Skills <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-slate-700 bg-clip-text text-transparent dark:from-[#27cbcb] dark:via-[#26d868] dark:to-[#80978f]">&amp; stack</span>
+          <SectionLabel label="skills & stack" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-8"
+        >
+          <h2 className="text-3xl font-bold text-white md:text-4xl">
+            Tech <span className="bg-gradient-to-r from-[#27cbcb] via-[#26d868] to-[#80978f] bg-clip-text text-transparent">toolkit</span>
           </h2>
-          <div className="mx-auto mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 dark:from-[#27cbcb] dark:to-[#26d868]" />
-          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-            A concise map of the tools I reach for when shipping full-stack products, AI features, and cloud-ready systems.
+          <p className="mt-2 max-w-xl text-sm text-slate-500">
+            Languages, frameworks, and infrastructure I work with daily.
           </p>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mb-12 flex flex-wrap gap-2"
+        >
+          {filters.map((f) => {
+            const isActive = activeFilter === f.id
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setActiveFilter(f.id)}
+                className={`relative rounded-full px-4 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider transition-all duration-300 sm:text-[12px] ${
+                  isActive
+                    ? "text-white shadow-[0_0_14px_-2px_rgba(39,203,203,0.25)]"
+                    : "text-slate-500 hover:text-slate-300"
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="filterBg"
+                    className="absolute inset-0 rounded-full border border-[#27cbcb]/40 bg-[#27cbcb]/10"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{f.label}</span>
+              </button>
+            )
+          })}
+        </motion.div>
 
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFilter}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="space-y-14"
+          >
+            {visibleCategories.map((category) => {
+              const globalStartIndex = skillCategories
+                .slice(0, skillCategories.indexOf(category))
+                .reduce((sum, c) => sum + c.skills.length, 0)
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {skillCategories.map((category, index) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: index * 0.06 }}
-              viewport={{ once: true }}
-              className="rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-300/40 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-teal-400/40 hover:shadow-xl dark:border-white/10 dark:bg-[#101318]/90 dark:shadow-black/30 dark:hover:border-[#27cbcb]/40"
-              whileHover={{ y: -4 }}
-            >
-              <div className="mb-4 text-center text-3xl">{category.icon}</div>
-              <h3 className="mb-4 text-center text-lg font-semibold text-slate-900 dark:text-white">{category.title}</h3>
-              <ul className="space-y-2">
-                {category.skills.map((skill) => (
-                  <li key={skill} className="flex items-center text-sm text-slate-700 dark:text-slate-300">
-                    <span className="mr-3 h-1.5 w-1.5 rounded-full bg-teal-500 dark:bg-[#27cbcb]" />
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
+              return (
+                <motion.div
+                  key={category.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+                    exit: { opacity: 0, y: -10, transition: { duration: 0.25 } },
+                  }}
+                >
+                  <div className="mb-6 flex items-center gap-4">
+                    <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.15em] text-white/90">
+                      {category.label}
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+                  </div>
+
+                  <AnimatePresence mode="popLayout">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:gap-4">
+                      {category.skills.map((skill, skillIndex) => {
+                        const LogoComponent = logoMap[skill.logo]
+                        if (!LogoComponent) return null
+
+                        return (
+                          <SkillCard
+                            key={skill.name}
+                            name={skill.name}
+                            logoSvg={LogoComponent}
+                            index={globalStartIndex + skillIndex}
+                          />
+                        )
+                      })}
+                    </div>
+                  </AnimatePresence>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+        </AnimatePresence>
       </PageContainer>
     </section>
   )

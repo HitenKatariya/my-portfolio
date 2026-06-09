@@ -63,10 +63,10 @@ const Footer = () => {
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.1 }} className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Capabilities</h4>
             <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-              <li>Product-grade MERN builds</li>
-              <li>AI-assisted workflows</li>
-              <li>AWS architecture studies</li>
-              <li>Security-aware defaults</li>
+              <li>Distributed system design &amp; architecture</li>
+              <li>Cloud-native infra (AWS VPC, EC2, S3, IAM)</li>
+              <li>CI/CD pipelines &amp; containerized deployments</li>
+              <li>Secure API gateway &amp; zero-trust patterns</li>
             </ul>
           </motion.div>
         </div>

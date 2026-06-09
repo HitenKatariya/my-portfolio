@@ -37,6 +37,7 @@
       "hours": null,
       "category": "Web",
       "accent": "from-emerald-500/20 to-cyan-500/10",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/XFTIETVWKPMG",
       "pdfUrl": "/certificates/MERN-Stack-Full-Course.pdf"
     },
     {
@@ -46,6 +47,7 @@
       "hours": null,
       "category": "AI/ML",
       "accent": "from-sky-500/20 to-blue-500/10",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/verify/LXKVBDQJ2S11",
       "pdfUrl": "/certificates/ML-with-python.pdf"
     },
     {
@@ -55,6 +57,7 @@
       "hours": null,
       "category": "DevOps",
       "accent": "from-violet-500/20 to-purple-500/10",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/3EOMIR2Q7CRO",
       "pdfUrl": "/certificates/Coursera_IBM_Devops.pdf"
     },
     {
@@ -64,6 +67,7 @@
       "hours": null,
       "category": "Security",
       "accent": "from-rose-500/20 to-fuchsia-500/10",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/verify/PUIO7DSO76FN",
       "pdfUrl": "/certificates/Coursera_cryptography.pdf"
     },
     {
@@ -73,6 +77,7 @@
       "hours": null,
       "category": "Research",
       "accent": "from-teal-500/20 to-emerald-500/10",
+      "credentialUrl": "https://coursera.org/verify/VS0MPX5CSVE8",
       "pdfUrl": "/certificates/Coursera_research_writing.pdf"
     }
   ],

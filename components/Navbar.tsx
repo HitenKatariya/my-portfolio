@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { FileText, Menu, X } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 import { pageContainerClass } from "@/components/PageContainer"
 import { cn } from "@/lib/utils"
@@ -113,7 +113,7 @@ const Navbar = () => {
           onClick={() => scrollToSection("#home")}
           className="font-mono text-[15px] text-slate-400 transition-colors hover:text-white sm:text-base"
         >
-          {`</${logoSlug}>`}
+          {`<${logoSlug}>`}
         </button>
 
         <div className="hidden items-center gap-7 md:flex">
@@ -143,6 +143,15 @@ const Navbar = () => {
               </button>
             )
           })}
+          <a
+            href={profile.resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-[#26d868]/40 bg-[#26d868]/10 px-4 py-1.5 font-mono text-[13px] font-semibold text-[#26d868] transition hover:bg-[#26d868]/20"
+          >
+            <FileText size={14} />
+            Resume
+          </a>
         </div>
 
         <button
@@ -183,6 +192,15 @@ const Navbar = () => {
                   </button>
                 )
               })}
+              <a
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 flex items-center gap-2 rounded-lg border border-[#26d868]/40 bg-[#26d868]/10 px-2 py-2.5 font-mono text-[15px] text-[#26d868] transition hover:bg-[#26d868]/20"
+              >
+                <FileText size={16} />
+                Resume
+              </a>
             </div>
           </motion.div>
         )}
