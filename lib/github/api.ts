@@ -81,6 +81,7 @@ export async function fetchRepositories(): Promise<GitHubRepo[]> {
 
     let readme: string | null = null
     try {
+      // First attempt: request raw text directly
       const readmeResponse = await fetch(
         `${GITHUB_API}/repos/${repo.full_name}/readme`,
         {
@@ -91,8 +92,40 @@ export async function fetchRepositories(): Promise<GitHubRepo[]> {
         },
       )
       if (readmeResponse.ok) {
-        const rawText = await readmeResponse.text()
-        readme = rawText.length > 10000 ? rawText.slice(0, 10000) : rawText
+        const contentType = readmeResponse.headers.get("content-type") || ""
+        if (contentType.includes("application/json")) {
+          // Fallback: API returned JSON with Base64 content — decode it
+          const jsonBody = (await readmeResponse.json()) as { content?: string; encoding?: string }
+          if (jsonBody.content && jsonBody.encoding === "base64") {
+            const decoded = Buffer.from(
+              jsonBody.content.replace(/\n/g, ""),
+              "base64",
+            ).toString("utf8")
+            readme = decoded.length > 12000 ? decoded.slice(0, 12000) : decoded
+          }
+        } else {
+          const rawText = await readmeResponse.text()
+          // Guard: if the raw text looks like JSON (starts with '{'), decode it
+          const trimmed = rawText.trimStart()
+          if (trimmed.startsWith("{")) {
+            try {
+              const jsonBody = JSON.parse(rawText) as { content?: string; encoding?: string }
+              if (jsonBody.content && jsonBody.encoding === "base64") {
+                const decoded = Buffer.from(
+                  jsonBody.content.replace(/\n/g, ""),
+                  "base64",
+                ).toString("utf8")
+                readme = decoded.length > 12000 ? decoded.slice(0, 12000) : decoded
+              } else {
+                readme = null
+              }
+            } catch {
+              readme = rawText.length > 12000 ? rawText.slice(0, 12000) : rawText
+            }
+          } else {
+            readme = rawText.length > 12000 ? rawText.slice(0, 12000) : rawText
+          }
+        }
       }
     } catch {
       readme = null
