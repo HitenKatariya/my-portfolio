@@ -1,6 +1,6 @@
 export const profile = {
   name: "Hiten Katariya",
-  role: "Cloud Engineer & Full Stack Developer",
+  role: "Software Engineer",
   photoUrl: "/profile/hiten.png",
   handle: "@hitenkatariya",
   location: "Surat, Gujarat",
@@ -9,7 +9,7 @@ export const profile = {
   resumeUrl: "https://drive.google.com/file/d/1DjTyl-Xpae4nf7MzPihbhbDLe1fjG8bY/view?usp=sharing",
   initials: "HK",
   summary: [
-    "Cloud-focused Full Stack Developer skilled in MERN, AWS, and scalable system design. Experienced in building AI-powered and production-ready applications with strong focus on performance, security, and clean architecture.",
+    "Software Engineer specializing in Full Stack Development, AI/ML, AWS Cloud, and scalable system design. Passionate about building intelligent, production-ready applications with modern technologies.",
     "Currently, I am seeking opportunities to apply my skills in real-world projects and contribute to innovative, high-impact systems.",
   ],
   social: [

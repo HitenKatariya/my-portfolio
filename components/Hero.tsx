@@ -65,10 +65,10 @@ const Hero = () => {
             <span className="text-slate-300">{` developer = "${profile.name}";`}</span>
           </p>
 
-          <h1 className="mb-2 max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[4.25rem]">
-            Cloud Engineer
+          <h1 className="mb-2 max-w-3xl text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[4.25rem]">
+            Software Engineer
             <br />
-            <span className="text-slate-300">&amp; Full Stack Developer</span>
+            <span className="text-lg font-medium tracking-normal text-cyan-400 sm:text-xl md:text-2xl">Full Stack • AI/ML • Cloud</span>
           </h1>
 
           <p className="mb-6 min-h-[3.5rem] max-w-2xl text-2xl font-semibold text-slate-500 sm:text-3xl">
@@ -97,7 +97,7 @@ const Hero = () => {
               Get in Touch
             </button>
             <span className="hidden font-mono text-xs text-slate-600 md:inline">
-              // cloud // full-stack // problem-solver
+              // Python // MERN // AI/ML // AWS
             </span>
           </div>
         </motion.div>
