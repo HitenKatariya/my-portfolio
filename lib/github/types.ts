@@ -23,6 +23,10 @@ export type GitHubRepo = {
 }
 
 export type AiMetadata = {
+  /** 2-3 sentence human-readable summary of what the project does */
+  summary: string
+  /** Key feature bullets extracted from the README (up to 6 items) */
+  keyFeatures: string[]
   projectPurpose: string
   repositoryType: string
   frontend: string[]

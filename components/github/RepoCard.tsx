@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronDown, ExternalLink, Star, GitFork } from "lucide-react"
+import { ChevronDown, ExternalLink, Star, GitFork, FileDown, Loader2 } from "lucide-react"
 import type { RepoContext } from "@/lib/github/types"
+import { buildRepoPdf } from "@/lib/github/pdfUtils"
 
 type RepoCardProps = {
   repoContext: RepoContext
@@ -12,7 +13,7 @@ type RepoCardProps = {
 export default function RepoCard({ repoContext }: RepoCardProps) {
   const { repo, metadata } = repoContext
   const [expanded, setExpanded] = useState(false)
-  const [loadingReadme, setLoadingReadme] = useState(false)
+  const [pdfLoading, setPdfLoading] = useState(false)
 
   const languageColors: Record<string, string> = {
     TypeScript: "#3178c6",
@@ -36,9 +37,23 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
 
   const langColor = repo.language ? languageColors[repo.language] || "#8b8b8b" : "#8b8b8b"
 
+  const downloadRepoPdf = async () => {
+    setPdfLoading(true)
+    try {
+      const doc = await buildRepoPdf([repoContext], undefined, undefined, { singleRepo: true })
+      doc.save(`${repo.name}.pdf`)
+    } catch (err) {
+      console.error("PDF error:", err)
+      alert("Failed to generate PDF.")
+    } finally {
+      setPdfLoading(false)
+    }
+  }
+
   return (
     <div className="group rounded-xl border border-zinc-800 bg-zinc-950/60 backdrop-blur-sm transition hover:border-zinc-700">
       <div className="p-5">
+        {/* ── Header row ── */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
@@ -59,17 +74,36 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
               </p>
             )}
           </div>
-          <a
-            href={repo.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 rounded-lg border border-zinc-800 p-2 text-zinc-500 transition hover:border-zinc-600 hover:text-white"
-            aria-label={`${repo.name} on GitHub`}
-          >
-            <ExternalLink className="h-4 w-4" />
-          </a>
+
+          {/* ── Action buttons (top-right) ── */}
+          <div className="flex shrink-0 items-center gap-1.5">
+            {/* Per-repo PDF download */}
+            <button
+              type="button"
+              onClick={downloadRepoPdf}
+              disabled={pdfLoading}
+              title={`Download ${repo.name} PDF`}
+              className="rounded-lg border border-zinc-800 p-2 text-zinc-500 transition hover:border-[#27cbcb]/50 hover:bg-[#27cbcb]/10 hover:text-[#27cbcb] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {pdfLoading
+                ? <Loader2 className="h-4 w-4 animate-spin" />
+                : <FileDown className="h-4 w-4" />}
+            </button>
+
+            {/* Open on GitHub */}
+            <a
+              href={repo.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg border border-zinc-800 p-2 text-zinc-500 transition hover:border-zinc-600 hover:text-white"
+              aria-label={`${repo.name} on GitHub`}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
         </div>
 
+        {/* ── Meta row ── */}
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-500">
           {repo.language && (
             <span className="flex items-center gap-1.5">
@@ -89,7 +123,8 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
             {repo.forks_count}
           </span>
           <span>
-            Updated {new Date(repo.updated_at).toLocaleDateString("en-US", {
+            Updated{" "}
+            {new Date(repo.updated_at).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -97,6 +132,7 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
           </span>
         </div>
 
+        {/* ── Topics ── */}
         {repo.topics.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {repo.topics.slice(0, 6).map((topic) => (
@@ -113,6 +149,7 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
           </div>
         )}
 
+        {/* ── Show More toggle ── */}
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
@@ -125,6 +162,7 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
         </button>
       </div>
 
+      {/* ── Expanded details ── */}
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -134,14 +172,15 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="border-t border-zinc-800 px-5 pb-5 pt-4 space-y-5">
+            <div className="space-y-5 border-t border-zinc-800 px-5 pb-5 pt-4">
+              {/* README preview */}
               {repo.readme && (
                 <div>
                   <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
                     README Preview
                   </h4>
                   <div className="max-h-60 overflow-y-auto rounded-lg border border-zinc-800 bg-zinc-900/50 p-3">
-                    <pre className="whitespace-pre-wrap text-xs leading-relaxed text-zinc-400 font-mono">
+                    <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-zinc-400">
                       {repo.readme.length > 3000
                         ? repo.readme.slice(0, 3000) + "\n... (truncated)"
                         : repo.readme}
@@ -150,6 +189,7 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
                 </div>
               )}
 
+              {/* Language breakdown */}
               {Object.keys(repo.languages).length > 0 && (
                 <div>
                   <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
@@ -164,9 +204,12 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
                         const color = languageColors[lang] || "#8b8b8b"
                         return (
                           <div key={lang} className="flex items-center gap-2 text-xs">
-                            <span className="inline-block h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                            <span
+                              className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+                              style={{ backgroundColor: color }}
+                            />
                             <span className="w-24 text-zinc-300">{lang}</span>
-                            <div className="flex-1 h-2 rounded-full bg-zinc-800 overflow-hidden">
+                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-800">
                               <div
                                 className="h-full rounded-full transition-all"
                                 style={{ width: `${pct}%`, backgroundColor: color }}
@@ -180,10 +223,26 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
                 </div>
               )}
 
+              {/* AI Metadata */}
               <div>
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                  AI Metadata
+                  AI Summary
                 </h4>
+                {/* Rich summary */}
+                {metadata.summary && (
+                  <p className="mb-3 text-sm leading-relaxed text-zinc-400">{metadata.summary}</p>
+                )}
+                {/* Key features */}
+                {metadata.keyFeatures?.length > 0 && (
+                  <ul className="mb-3 space-y-1">
+                    {metadata.keyFeatures.map((feat, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-zinc-400">
+                        <span className="mt-0.5 shrink-0 text-[#27cbcb]">•</span>
+                        {feat}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <div className="grid grid-cols-1 gap-x-6 gap-y-1.5 sm:grid-cols-2">
                   <MetaItem label="Purpose" value={metadata.projectPurpose} />
                   <MetaItem label="Type" value={metadata.repositoryType} />
@@ -198,11 +257,24 @@ export default function RepoCard({ repoContext }: RepoCardProps) {
                   {metadata.deployment.length > 0 && (
                     <MetaItem label="Deployment" value={metadata.deployment.join(", ")} />
                   )}
-                  {metadata.technologies.length > 0 && (
-                    <MetaItem label="Technologies" value={metadata.technologies.join(", ")} />
+                  {metadata.authentication.length > 0 && (
+                    <MetaItem label="Auth" value={metadata.authentication.join(", ")} />
                   )}
                 </div>
               </div>
+
+              {/* Per-repo PDF button (also inside expanded for visibility) */}
+              <button
+                type="button"
+                onClick={downloadRepoPdf}
+                disabled={pdfLoading}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#27cbcb]/30 bg-[#27cbcb]/5 py-2.5 text-sm font-medium text-[#27cbcb] transition hover:bg-[#27cbcb]/10 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {pdfLoading
+                  ? <Loader2 className="h-4 w-4 animate-spin" />
+                  : <FileDown className="h-4 w-4" />}
+                {pdfLoading ? "Generating PDF…" : `Download ${repo.name}.pdf`}
+              </button>
             </div>
           </motion.div>
         )}

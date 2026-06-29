@@ -66,6 +66,53 @@ export async function validateToken(): Promise<{ login: string }> {
   return response.json() as Promise<{ login: string }>
 }
 
+/**
+ * Fetches the README for a repository using the JSON Contents API.
+ * The v3+json endpoint reliably returns { content, encoding } — we decode
+ * the Base64 `content` field. This avoids all the content-type ambiguity of
+ * the `application/vnd.github.raw` Accept header.
+ */
+async function fetchReadme(fullName: string): Promise<string | null> {
+  try {
+    const response = await fetch(`${GITHUB_API}/repos/${fullName}/readme`, {
+      headers: {
+        ...getAuthHeaders(),
+        Accept: "application/vnd.github.v3+json",
+      },
+    })
+
+    if (!response.ok) return null
+
+    const json = (await response.json()) as {
+      content?: string
+      encoding?: string
+      download_url?: string
+    }
+
+    // Primary path: decode Base64 content
+    if (json.content && json.encoding === "base64") {
+      const decoded = Buffer.from(json.content.replace(/\n/g, ""), "base64").toString("utf8")
+      // Cap at 15,000 chars to keep cache and PDF manageable
+      return decoded.length > 15000 ? decoded.slice(0, 15000) : decoded
+    }
+
+    // Fallback: fetch the raw download URL
+    if (json.download_url) {
+      const rawResponse = await fetch(json.download_url, {
+        headers: getAuthHeaders(),
+      })
+      if (rawResponse.ok) {
+        const text = await rawResponse.text()
+        return text.length > 15000 ? text.slice(0, 15000) : text
+      }
+    }
+
+    return null
+  } catch {
+    return null
+  }
+}
+
 export async function fetchRepositories(): Promise<GitHubRepo[]> {
   const username = process.env.GITHUB_USERNAME
   if (!username) {
@@ -79,87 +126,33 @@ export async function fetchRepositories(): Promise<GitHubRepo[]> {
   for (const repo of repos) {
     if (repo.fork) continue
 
-    let readme: string | null = null
-    try {
-      // First attempt: request raw text directly
-      const readmeResponse = await fetch(
-        `${GITHUB_API}/repos/${repo.full_name}/readme`,
-        {
-          headers: {
-            ...getAuthHeaders(),
-            Accept: "application/vnd.github.raw",
-          },
+    // Fetch readme, languages, and topics in parallel
+    const [readme, languagesResult, topicsResult] = await Promise.allSettled([
+      fetchReadme(repo.full_name),
+      fetchWithRetry(`${GITHUB_API}/repos/${repo.full_name}/languages`),
+      fetch(`${GITHUB_API}/repos/${repo.full_name}/topics`, {
+        headers: {
+          ...getAuthHeaders(),
+          Accept: "application/vnd.github.mercy-preview+json",
         },
-      )
-      if (readmeResponse.ok) {
-        const contentType = readmeResponse.headers.get("content-type") || ""
-        if (contentType.includes("application/json")) {
-          // Fallback: API returned JSON with Base64 content — decode it
-          const jsonBody = (await readmeResponse.json()) as { content?: string; encoding?: string }
-          if (jsonBody.content && jsonBody.encoding === "base64") {
-            const decoded = Buffer.from(
-              jsonBody.content.replace(/\n/g, ""),
-              "base64",
-            ).toString("utf8")
-            readme = decoded.length > 12000 ? decoded.slice(0, 12000) : decoded
-          }
-        } else {
-          const rawText = await readmeResponse.text()
-          // Guard: if the raw text looks like JSON (starts with '{'), decode it
-          const trimmed = rawText.trimStart()
-          if (trimmed.startsWith("{")) {
-            try {
-              const jsonBody = JSON.parse(rawText) as { content?: string; encoding?: string }
-              if (jsonBody.content && jsonBody.encoding === "base64") {
-                const decoded = Buffer.from(
-                  jsonBody.content.replace(/\n/g, ""),
-                  "base64",
-                ).toString("utf8")
-                readme = decoded.length > 12000 ? decoded.slice(0, 12000) : decoded
-              } else {
-                readme = null
-              }
-            } catch {
-              readme = rawText.length > 12000 ? rawText.slice(0, 12000) : rawText
-            }
-          } else {
-            readme = rawText.length > 12000 ? rawText.slice(0, 12000) : rawText
-          }
-        }
-      }
-    } catch {
-      readme = null
-    }
+      }),
+    ])
+
+    const readmeText = readme.status === "fulfilled" ? readme.value : null
 
     let languages: Record<string, number> = {}
-    try {
-      const langResponse = await fetchWithRetry(
-        `${GITHUB_API}/repos/${repo.full_name}/languages`,
-      )
-      if (langResponse.ok) {
-        languages = (await langResponse.json()) as Record<string, number>
-      }
-    } catch {
-      languages = {}
+    if (languagesResult.status === "fulfilled" && languagesResult.value.ok) {
+      try {
+        languages = (await languagesResult.value.json()) as Record<string, number>
+      } catch {}
     }
 
     let topics: string[] = []
-    try {
-      const topicResponse = await fetch(
-        `${GITHUB_API}/repos/${repo.full_name}/topics`,
-        {
-          headers: {
-            ...getAuthHeaders(),
-            Accept: "application/vnd.github.mercy-preview+json",
-          },
-        },
-      )
-      if (topicResponse.ok) {
-        const topicData = (await topicResponse.json()) as { names: string[] }
+    if (topicsResult.status === "fulfilled" && topicsResult.value.ok) {
+      try {
+        const topicData = (await topicsResult.value.json()) as { names: string[] }
         topics = topicData.names || []
-      }
-    } catch {
-      topics = []
+      } catch {}
     }
 
     enriched.push({
@@ -183,7 +176,7 @@ export async function fetchRepositories(): Promise<GitHubRepo[]> {
       pushed_at: repo.pushed_at,
       created_at: repo.created_at,
       owner: { login: repo.owner.login, avatar_url: repo.owner.avatar_url },
-      readme,
+      readme: readmeText,
     })
   }
 
