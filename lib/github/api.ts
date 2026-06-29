@@ -81,8 +81,14 @@ export async function fetchRepositories(): Promise<GitHubRepo[]> {
 
     let readme: string | null = null
     try {
-      const readmeResponse = await fetchWithRetry(
+      const readmeResponse = await fetch(
         `${GITHUB_API}/repos/${repo.full_name}/readme`,
+        {
+          headers: {
+            ...getAuthHeaders(),
+            Accept: "application/vnd.github.raw",
+          },
+        },
       )
       if (readmeResponse.ok) {
         const rawText = await readmeResponse.text()
