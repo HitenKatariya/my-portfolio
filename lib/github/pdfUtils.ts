@@ -432,36 +432,149 @@ export async function buildRepoPdf(
 
   // ── Cover page (only for multi-repo / full export) ────────────────────────
   if (!opts?.singleRepo) {
-    fillPageBg()
-    doc.setFillColor(30, 55, 55); doc.rect(0, PH * 0.35, PW, PH * 0.32, "F")
-    doc.setFillColor(...COLORS.TEAL)
-    doc.rect(0, PH * 0.35, PW, 1.5, "F"); doc.rect(0, PH * 0.67 - 1.5, PW, 1.5, "F")
+    // ── Zone 1: Full-page dark base ───────────────────────────────────────
+    doc.setFillColor(...COLORS.BG_PAGE)
+    doc.rect(0, 0, PW, PH, "F")
 
-    doc.setFontSize(34); doc.setFont(undefined, "bold"); doc.setTextColor(...COLORS.TEAL)
-    doc.text("AI Context", PW / 2, PH * 0.45, { align: "center" })
-    doc.setFontSize(18); doc.setFont(undefined, "normal"); doc.setTextColor(...COLORS.WHITE)
-    doc.text("Hiten Katariya", PW / 2, PH * 0.45 + 14, { align: "center" })
-    doc.setDrawColor(...COLORS.TEAL); doc.setLineWidth(0.5)
-    doc.line(PW / 2 - 30, PH * 0.45 + 18, PW / 2 + 30, PH * 0.45 + 18)
-    const dateStr = lastSync ? new Date(lastSync).toLocaleDateString("en-US", {
-      year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit"
-    }) : "N/A"
-    doc.setFontSize(9); doc.setTextColor(...COLORS.SUB)
-    doc.text(`Generated: ${dateStr}`, PW / 2, PH * 0.45 + 26, { align: "center" })
+    // Left teal accent bar (full height)
+    doc.setFillColor(...COLORS.TEAL)
+    doc.rect(0, 0, 4, PH, "F")
+
+    // Right subtle bar
+    doc.setFillColor(28, 38, 38)
+    doc.rect(PW - 4, 0, 4, PH, "F")
+
+    // ── Zone 2: Top header band (y=0 → 48mm) ────────────────────────────
+    doc.setFillColor(20, 24, 30)
+    doc.rect(4, 0, PW - 8, 48, "F")
+
+    // Header: name in teal small-caps
+    doc.setFontSize(8)
+    doc.setFont(undefined, "bold")
+    doc.setTextColor(...COLORS.TEAL)
+    doc.text("HITEN KATARIYA", PW / 2, 17, { align: "center" })
+
+    // Tagline
+    doc.setFontSize(6.5)
+    doc.setFont(undefined, "normal")
+    doc.setTextColor(...COLORS.SUB)
+    doc.text("Full-Stack Developer  ·  Cloud Engineer  ·  AI Integration", PW / 2, 25, { align: "center" })
+
+    // Bottom border of header band
+    doc.setDrawColor(...COLORS.TEAL)
+    doc.setLineWidth(0.35)
+    doc.line(4, 48, PW - 4, 48)
+
+    // ── Zone 3: Hero title (y=60 → 130mm) ───────────────────────────────
+    // Large "AI" in teal
+    doc.setFontSize(68)
+    doc.setFont(undefined, "bold")
+    doc.setTextColor(...COLORS.TEAL)
+    doc.text("AI", PW / 2, 98, { align: "center" })
+
+    // "CONTEXT" in white below
+    doc.setFontSize(32)
+    doc.setFont(undefined, "normal")
+    doc.setTextColor(...COLORS.WHITE)
+    doc.text("C O N T E X T", PW / 2, 116, { align: "center" })
+
+    // Decorative divider
+    doc.setDrawColor(...COLORS.TEAL)
+    doc.setLineWidth(0.5)
+    doc.line(PW / 2 - 40, 122, PW / 2 + 40, 122)
+
+    // Thin subtitle
+    doc.setFontSize(7.5)
+    doc.setFont(undefined, "normal")
+    doc.setTextColor(...COLORS.SUB)
+    doc.text("AI-ready context generated from GitHub repositories", PW / 2, 130, { align: "center" })
+
+    // ── Zone 4: Stats row (y=140 → 170mm) ───────────────────────────────
+    const statsBoxY = 140
+    const statsBoxH = 28
+    doc.setFillColor(20, 30, 30)
+    doc.roundedRect(LM, statsBoxY, CW, statsBoxH, 3, 3, "F")
+    doc.setDrawColor(...COLORS.TEAL)
+    doc.setLineWidth(0.2)
+    doc.roundedRect(LM, statsBoxY, CW, statsBoxH, 3, 3, "S")
+
+    // Vertical dividers inside stats box
+    const statCols = 4
+    const statColW = CW / statCols
+    for (let d = 1; d < statCols; d++) {
+      doc.setDrawColor(35, 50, 50)
+      doc.setLineWidth(0.15)
+      doc.line(LM + statColW * d, statsBoxY + 4, LM + statColW * d, statsBoxY + statsBoxH - 4)
+    }
 
     const statItems = [
-      `${stats?.total ?? 0}  Repos`,
-      `${stats?.stars ?? 0}  Stars`,
-      `${stats?.forks ?? 0}  Forks`,
-      `${stats?.public ?? 0}  Public`,
+      { label: "REPOS",   value: String(stats?.total  ?? 0) },
+      { label: "STARS",   value: String(stats?.stars  ?? 0) },
+      { label: "FORKS",   value: String(stats?.forks  ?? 0) },
+      { label: "PUBLIC",  value: String(stats?.public ?? 0) },
     ]
-    let sx = PW / 2 - 58
-    for (const stat of statItems) {
-      const sw = doc.getStringUnitWidth(stat) * 9 * 0.352 + 10
-      doc.setFillColor(28, 50, 50); doc.roundedRect(sx, PH * 0.45 + 32, sw, 8, 2, 2, "F")
-      doc.setFontSize(8); doc.setTextColor(...COLORS.TEAL)
-      doc.text(stat, sx + sw / 2, PH * 0.45 + 37.5, { align: "center" }); sx += sw + 4
-    }
+    statItems.forEach((s, i) => {
+      const cx = LM + statColW * i + statColW / 2
+      doc.setFontSize(15)
+      doc.setFont(undefined, "bold")
+      doc.setTextColor(...COLORS.TEAL)
+      doc.text(s.value, cx, statsBoxY + 14, { align: "center" })
+      doc.setFontSize(6)
+      doc.setFont(undefined, "normal")
+      doc.setTextColor(...COLORS.FAINT)
+      doc.text(s.label, cx, statsBoxY + 22, { align: "center" })
+    })
+
+    // ── Zone 5: Description (y=178 → 210mm) ─────────────────────────────
+    doc.setFontSize(8.5)
+    doc.setFont(undefined, "normal")
+    doc.setTextColor(...COLORS.BODY)
+    const desc1 = "Contains README content, metadata, language breakdown,"
+    const desc2 = "AI-generated summaries, and key features for every repository."
+    doc.text(desc1, PW / 2, 182, { align: "center" })
+    doc.text(desc2, PW / 2, 190, { align: "center" })
+
+    // Generation date
+    const dateStr = lastSync
+      ? new Date(lastSync).toLocaleDateString("en-US", {
+          year: "numeric", month: "long", day: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        })
+      : "N/A"
+    doc.setFontSize(7.5)
+    doc.setTextColor(...COLORS.SUB)
+    doc.text(`Generated: ${dateStr}`, PW / 2, 202, { align: "center" })
+
+    // ── Zone 6: Bottom accent zone (y=218 → PH) ─────────────────────────
+    doc.setFillColor(16, 20, 26)
+    doc.rect(4, 218, PW - 8, PH - 218, "F")
+
+    // Separator
+    doc.setDrawColor(...COLORS.TEAL)
+    doc.setLineWidth(0.3)
+    doc.line(4, 218, PW - 4, 218)
+
+    // Large watermark-style repo count
+    doc.setFontSize(72)
+    doc.setFont(undefined, "bold")
+    doc.setTextColor(22, 30, 30)   // very dark teal — visible only subtly
+    doc.text(String(stats?.total ?? ""), PW / 2, 272, { align: "center" })
+
+    // Label over watermark
+    doc.setFontSize(10)
+    doc.setFont(undefined, "bold")
+    doc.setTextColor(...COLORS.TEAL)
+    doc.text("repositories indexed", PW / 2, 255, { align: "center" })
+
+    // GitHub URL
+    doc.setFontSize(7)
+    doc.setFont(undefined, "normal")
+    doc.setTextColor(...COLORS.FAINT)
+    doc.text("github.com/HitenKatariya", PW / 2, 284, { align: "center" })
+
+    // Bottom teal bar
+    doc.setFillColor(...COLORS.TEAL)
+    doc.rect(0, PH - 3, PW, 3, "F")
 
     // TOC
     doc.addPage(); fillPageBg(); y = 26
