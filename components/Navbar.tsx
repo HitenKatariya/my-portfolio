@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { FileText, Menu, X } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
 import { pageContainerClass } from "@/components/PageContainer"
+import { ResumeDialog } from "@/components/ResumeDialog"
 import { cn } from "@/lib/utils"
 
 const SCROLL_BG_THRESHOLD = 48
@@ -143,15 +144,15 @@ const Navbar = () => {
               </button>
             )
           })}
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-[#26d868]/40 bg-[#26d868]/10 px-4 py-1.5 font-mono text-[13px] font-semibold text-[#26d868] transition hover:bg-[#26d868]/20"
-          >
-            <FileText size={14} />
-            Resume
-          </a>
+          <ResumeDialog>
+            <button
+              type="button"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#26d868]/40 bg-[#26d868]/10 px-4 py-1.5 font-mono text-[13px] font-semibold text-[#26d868] transition hover:bg-[#26d868]/20"
+            >
+              <FileText size={14} />
+              Resume
+            </button>
+          </ResumeDialog>
         </div>
 
         <button
@@ -192,15 +193,15 @@ const Navbar = () => {
                   </button>
                 )
               })}
-              <a
-                href={profile.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 flex items-center gap-2 rounded-lg border border-[#26d868]/40 bg-[#26d868]/10 px-2 py-2.5 font-mono text-[15px] text-[#26d868] transition hover:bg-[#26d868]/20"
-              >
-                <FileText size={16} />
-                Resume
-              </a>
+              <ResumeDialog>
+                <button
+                  type="button"
+                  className="mt-2 flex w-full cursor-pointer items-center gap-2 rounded-lg border border-[#26d868]/40 bg-[#26d868]/10 px-2 py-2.5 font-mono text-[15px] text-[#26d868] transition hover:bg-[#26d868]/20"
+                >
+                  <FileText size={16} />
+                  Resume
+                </button>
+              </ResumeDialog>
             </div>
           </motion.div>
         )}

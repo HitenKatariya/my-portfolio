@@ -3,8 +3,9 @@
 import type React from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send, ArrowUpRight, Calendar } from "lucide-react"
+import { Mail, MapPin, Phone, Send, FileText, Calendar } from "lucide-react"
 import { profile } from "@/lib/constants/profile"
+import { ResumeDialog } from "@/components/ResumeDialog"
 import PageContainer from "@/components/PageContainer"
 import SectionLabel from "@/components/SectionLabel"
 
@@ -76,15 +77,15 @@ const Contact = () => {
             Have an opportunity or project in mind? Send a quick message — I usually respond within 24 hours.
           </p>
           <div className="mt-5">
-            <a
-              href="https://drive.google.com/file/d/1DjTyl-Xpae4nf7MzPihbhbDLe1fjG8bY/view?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-[#26d868]/40 bg-[#26d868]/5 px-5 py-2.5 text-sm font-semibold text-[#26d868] transition hover:bg-[#26d868]/15"
-            >
-              <span>View Resume</span>
-              <ArrowUpRight size={16} />
-            </a>
+            <ResumeDialog>
+              <button
+                type="button"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#26d868]/40 bg-[#26d868]/5 px-5 py-2.5 text-sm font-semibold text-[#26d868] transition hover:bg-[#26d868]/15"
+              >
+                <FileText size={16} />
+                <span>View Resume</span>
+              </button>
+            </ResumeDialog>
           </div>
         </motion.div>
 

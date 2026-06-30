@@ -6,7 +6,7 @@ export const profile = {
   location: "Surat, Gujarat",
   phone: "+91 9099590979",
   email: "work.hitenkatariya@gmail.com",
-  resumeUrl: "https://drive.google.com/file/d/1DjTyl-Xpae4nf7MzPihbhbDLe1fjG8bY/view?usp=sharing",
+  resumeUrl: "https://drive.google.com/file/d/1PslVQZIppFibFTACeqJ19C_MP27GW-J3/view?usp=sharing",
   initials: "HK",
   summary: [
     "Software Engineer specializing in Full Stack Development, AI/ML, AWS Cloud, and scalable system design. Passionate about building intelligent, production-ready applications with modern technologies.",
